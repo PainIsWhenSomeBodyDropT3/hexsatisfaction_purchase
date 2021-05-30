@@ -7,6 +7,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// Comments represents a slice of a comment model.
+type Comments []Comment
+
+// CommentsDTO represents a slice of a dto comment model.
+type CommentsDTO []CommentDTO
+
 // Comment represents a comment model.
 type Comment struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty"`
@@ -65,4 +71,26 @@ func (c Comment) DTO() *CommentDTO {
 	}
 
 	return &comment
+}
+
+// Entity converts CommentsDTO to Comments.
+func (c CommentsDTO) Entity() (Comments, error) {
+	var comments Comments
+	for _, comment := range c {
+		entityComment, err := comment.Entity()
+		if err != nil {
+			return nil, err
+		}
+		comments = append(comments, *entityComment)
+	}
+	return comments, nil
+}
+
+// DTO converts Comments to CommentsDTO
+func (c Comments) DTO() CommentsDTO {
+	var comments CommentsDTO
+	for _, comment := range c {
+		comments = append(comments, *comment.DTO())
+	}
+	return comments
 }

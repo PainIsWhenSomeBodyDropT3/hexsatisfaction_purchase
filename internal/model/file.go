@@ -7,6 +7,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// Files represents a slice of a file model.
+type Files []File
+
+// FilesDTO represents a slice of a dto file model.
+type FilesDTO []FileDTO
+
 // File represents a file model.
 type File struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty"`
@@ -76,4 +82,26 @@ func (f File) DTO() *FileDTO {
 	}
 
 	return &file
+}
+
+// Entity converts FilesDTO to Files.
+func (f FilesDTO) Entity() (Files, error) {
+	var files Files
+	for _, file := range f {
+		entityFile, err := file.Entity()
+		if err != nil {
+			return nil, err
+		}
+		files = append(files, *entityFile)
+	}
+	return files, nil
+}
+
+// DTO converts Files to FilesDTO
+func (f Files) DTO() FilesDTO {
+	var files FilesDTO
+	for _, file := range f {
+		files = append(files, *file.DTO())
+	}
+	return files
 }
