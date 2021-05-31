@@ -13,6 +13,7 @@ import (
 
 const timeout = 5
 
+// NewMongo creates new connection to mongo database.
 func NewMongo(ctx context.Context, cfg config.MongoConfig) (*mongo.Database, error) {
 	cfg.URI = fmt.Sprintf("%s://%s:%d", cfg.Dialect, cfg.Host, cfg.Port)
 	c, err := mongo.NewClient(options.Client().ApplyURI(cfg.URI))
