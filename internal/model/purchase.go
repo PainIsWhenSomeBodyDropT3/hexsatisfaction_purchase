@@ -1,9 +1,9 @@
 package model
 
 import (
-	"fmt"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -38,19 +38,19 @@ func (p PurchaseDTO) Entity() (*Purchase, error) {
 	if p.ID != "" {
 		purchase.ID, err = primitive.ObjectIDFromHex(p.ID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid id : %v", err)
+			return nil, errors.Wrap(err, "invalid id")
 		}
 	}
 	if p.UserID != "" {
 		purchase.UserID, err = primitive.ObjectIDFromHex(p.UserID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid user id : %v", err)
+			return nil, errors.Wrap(err, "invalid user id")
 		}
 	}
 	if p.FileID != "" {
 		purchase.FileID, err = primitive.ObjectIDFromHex(p.FileID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid file id : %v", err)
+			return nil, errors.Wrap(err, "invalid file id")
 		}
 	}
 
@@ -75,7 +75,7 @@ func (p PurchasesDTO) Entity() (Purchases, error) {
 	for _, purchase := range p {
 		entityComment, err := purchase.Entity()
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "couldn't convert purchase dto to purchase")
 		}
 		purchases = append(purchases, *entityComment)
 	}

@@ -1,5 +1,5 @@
 .PHONY lint:
-		golangci-lint run --config .golangci.yml
+	golangci-lint run --config .golangci.yml
 
 .PHONY swagger:swagger-spec
 

@@ -1,13 +1,12 @@
 package auth
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/middleware"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/pkg/errors"
 )
 
 const authorizationHeader = "Authorization"
@@ -46,17 +45,17 @@ func (m *Manager) NewJWT(userID string) (string, error) {
 func (m *Manager) Parse(accessToken string) (string, error) {
 	token, err := jwt.Parse(accessToken, func(token *jwt.Token) (i interface{}, err error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, errors.Wrap(err, "unexpected signing method")
 		}
 		return []byte(m.signingKey), nil
 	})
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "couldn't parse token")
 	}
 
 	subClaims, ok := token.Claims.(jwt.MapClaims)["sub"]
 	if !ok {
-		return "", fmt.Errorf("error get user Claims from token")
+		return "", errors.New("empty claims")
 	}
 	return subClaims.(string), nil
 }

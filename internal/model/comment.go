@@ -1,9 +1,9 @@
 package model
 
 import (
-	"fmt"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -41,19 +41,19 @@ func (c CommentDTO) Entity() (*Comment, error) {
 	if c.ID != "" {
 		comment.ID, err = primitive.ObjectIDFromHex(c.ID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid id : %v", err)
+			return nil, errors.Wrap(err, "invalid id")
 		}
 	}
 	if c.UserID != "" {
 		comment.UserID, err = primitive.ObjectIDFromHex(c.UserID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid user id : %v", err)
+			return nil, errors.Wrap(err, "invalid user id")
 		}
 	}
 	if c.PurchaseID != "" {
 		comment.PurchaseID, err = primitive.ObjectIDFromHex(c.PurchaseID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid purchase id : %v", err)
+			return nil, errors.Wrap(err, "invalid purchase id")
 		}
 	}
 
@@ -79,7 +79,7 @@ func (c CommentsDTO) Entity() (Comments, error) {
 	for _, comment := range c {
 		entityComment, err := comment.Entity()
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "couldn't convert comment dto to comment")
 		}
 		comments = append(comments, *entityComment)
 	}

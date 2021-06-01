@@ -1,9 +1,9 @@
 package model
 
 import (
-	"fmt"
 	"time"
 
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -54,13 +54,13 @@ func (f FileDTO) Entity() (*File, error) {
 	if f.ID != "" {
 		file.ID, err = primitive.ObjectIDFromHex(f.ID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid id : %v", err)
+			return nil, errors.Wrap(err, "invalid id")
 		}
 	}
 	if f.AuthorID != "" {
 		file.AuthorID, err = primitive.ObjectIDFromHex(f.AuthorID)
 		if err != nil {
-			return nil, fmt.Errorf("invalid author id : %v", err)
+			return nil, errors.Wrap(err, "invalid author id")
 		}
 	}
 
@@ -90,7 +90,7 @@ func (f FilesDTO) Entity() (Files, error) {
 	for _, file := range f {
 		entityFile, err := file.Entity()
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "couldn't convert file dto to file")
 		}
 		files = append(files, *entityFile)
 	}
