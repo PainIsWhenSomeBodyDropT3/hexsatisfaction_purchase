@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/database/mongo"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -14,12 +15,7 @@ type Purchases []Purchase
 type PurchasesDTO []PurchaseDTO
 
 // Purchase represents a purchase model.
-type Purchase struct {
-	ID     primitive.ObjectID `bson:"_id,omitempty"`
-	UserID primitive.ObjectID `bson:"userID"`
-	Date   time.Time          `bson:"date"`
-	FileID primitive.ObjectID `bson:"fileID"`
-}
+type Purchase mongo.Purchase
 
 // PurchaseDTO represents dto of a purchase model.
 type PurchaseDTO struct {

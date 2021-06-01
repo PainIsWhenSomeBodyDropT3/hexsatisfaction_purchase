@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/database/mongo"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -14,13 +15,7 @@ type Comments []Comment
 type CommentsDTO []CommentDTO
 
 // Comment represents a comment model.
-type Comment struct {
-	ID         primitive.ObjectID `bson:"_id,omitempty"`
-	UserID     primitive.ObjectID `bson:"userID"`
-	PurchaseID primitive.ObjectID `bson:"purchaseID"`
-	Date       time.Time          `bson:"date"`
-	Text       string             `bson:"text"`
-}
+type Comment mongo.Comment
 
 // Comment represents dto of a comment model.
 type CommentDTO struct {

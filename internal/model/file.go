@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/database/mongo"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -14,17 +15,7 @@ type Files []File
 type FilesDTO []FileDTO
 
 // File represents a file model.
-type File struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty"`
-	Name        string             `bson:"name"`
-	Description string             `bson:"description"`
-	Size        int                `bson:"size"`
-	Path        string             `bson:"path"`
-	AddDate     time.Time          `bson:"addDate"`
-	UpdateDate  time.Time          `bson:"updateDate"`
-	Actual      bool               `bson:"actual"`
-	AuthorID    primitive.ObjectID `bson:"authorID"`
-}
+type File mongo.File
 
 // FileDTO represents dto of a file model.
 type FileDTO struct {
