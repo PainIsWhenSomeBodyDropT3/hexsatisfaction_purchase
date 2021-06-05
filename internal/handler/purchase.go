@@ -13,6 +13,7 @@ import (
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/auth"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/middleware"
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type purchaseRouter struct {
@@ -119,11 +120,11 @@ func (req *createPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request for create purchase.
 func (req *createPurchaseRequest) Validate() error {
 	switch {
-	case req.UserID == "":
+	case !primitive.IsValidObjectID(req.UserID):
 		return fmt.Errorf("not correct user id")
 	case req.Date == time.Time{}:
 		return fmt.Errorf("date is required")
-	case req.FileID == "":
+	case !primitive.IsValidObjectID(req.FileID):
 		return fmt.Errorf("file id is required")
 	default:
 		return nil
@@ -177,7 +178,7 @@ func (req *deletePurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to delete purchase.
 func (req *deletePurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -237,7 +238,7 @@ func (req *idPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find purchase by id.
 func (req *idPurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -297,7 +298,7 @@ func (req *lastUserIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find last purchase by user id.
 func (req *lastUserIDPurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -357,7 +358,7 @@ func (req *userIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id.
 func (req *userIDPurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -429,7 +430,7 @@ func (req *userIDPeriodPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id and date period.
 func (req *userIDPeriodPurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	case req.Start == time.Time{}:
 		return fmt.Errorf("start date is required")
@@ -506,7 +507,7 @@ func (req *userIDAfterDatePurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id after date.
 func (req *userIDAfterDatePurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	case req.Start == time.Time{}:
 		return fmt.Errorf("start date is required")
@@ -581,7 +582,7 @@ func (req *userIDBeforeDatePurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id before date.
 func (req *userIDBeforeDatePurchaseRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	case req.End == time.Time{}:
 		return fmt.Errorf("end date is required")
@@ -651,9 +652,9 @@ func (req *userIDFileIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id and file name.
 func (req *userIDFileIDPurchaseRequest) Validate() error {
 	switch {
-	case req.UserID == "":
+	case !primitive.IsValidObjectID(req.UserID):
 		return fmt.Errorf("not correct user id")
-	case req.FileID == "":
+	case !primitive.IsValidObjectID(req.FileID):
 		return fmt.Errorf("not correct file id")
 	default:
 		return nil
@@ -961,7 +962,7 @@ func (req *fileIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by file name.
 func (req *fileIDPurchaseRequest) Validate() error {
 	switch {
-	case req.FileID == "":
+	case !primitive.IsValidObjectID(req.FileID):
 		return fmt.Errorf("not correct file id")
 	default:
 		return nil
