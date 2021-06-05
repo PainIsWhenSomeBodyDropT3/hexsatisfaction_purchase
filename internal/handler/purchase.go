@@ -130,6 +130,17 @@ func (req *createPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary Create
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Create purchase
+// @Accept  json
+// @Produce  json
+// @Param purchase body model.CreatePurchaseRequest true "Purchase"
+// @Success 200 {string} string id
+// @Failure 400 {object} middleware.SwagError
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/ [post]
 func (p *purchaseRouter) createPurchase(w http.ResponseWriter, r *http.Request) {
 	var req createPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -173,6 +184,18 @@ func (req *deletePurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary Delete
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Delete
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Purchase id"
+// @Success 200 {string} string id
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchase"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/{id} [delete]
 func (p *purchaseRouter) deletePurchase(w http.ResponseWriter, r *http.Request) {
 	var req deletePurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -221,6 +244,18 @@ func (req *idPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByID
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find purchase by id
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Purchase id"
+// @Success 200 {object} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchase"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/{id} [get]
 func (p *purchaseRouter) findByIDPurchase(w http.ResponseWriter, r *http.Request) {
 	var req idPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -269,6 +304,18 @@ func (req *lastUserIDPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindLastByUserID
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find last purchase by user id
+// @Accept  json
+// @Produce  json
+// @Param id path string true "User id"
+// @Success 200 {object} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchase"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/last/user/{id} [get]
 func (p *purchaseRouter) findLastByUserIDPurchase(w http.ResponseWriter, r *http.Request) {
 	var req lastUserIDPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -317,6 +364,18 @@ func (req *userIDPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindAllByUserID
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find purchases by user id
+// @Accept  json
+// @Produce  json
+// @Param id path string true "User id"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/user/{id} [get]
 func (p *purchaseRouter) findAllByUserIDPurchase(w http.ResponseWriter, r *http.Request) {
 	var req userIDPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -381,6 +440,19 @@ func (req *userIDPeriodPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByUserIDAndPeriod
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find by user id and period
+// @Accept  json
+// @Produce  json
+// @Param period body model.UserIDPeriodPurchaseRequest true "Period"
+// @Param id path string true "User id"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/period/user/{id} [post]
 func (p *purchaseRouter) findByUserIDAndPeriodPurchase(w http.ResponseWriter, r *http.Request) {
 	var req userIDPeriodPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -443,6 +515,19 @@ func (req *userIDAfterDatePurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByUserIDAfterDate
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find by user id after date
+// @Accept  json
+// @Produce  json
+// @Param period body model.UserIDAfterDatePurchaseRequest true "After date"
+// @Param id path string true "User id"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/after/user/{id} [post]
 func (p *purchaseRouter) findByUserIDAfterDatePurchase(w http.ResponseWriter, r *http.Request) {
 	var req userIDAfterDatePurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -505,6 +590,19 @@ func (req *userIDBeforeDatePurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByUserIDBeforeDate
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find by user id before date
+// @Accept  json
+// @Produce  json
+// @Param period body model.UserIDBeforeDatePurchaseRequest true "Before date"
+// @Param id path string true "User id"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/before/user/{id} [post]
 func (p *purchaseRouter) findByUserIDBeforeDatePurchase(w http.ResponseWriter, r *http.Request) {
 	var req userIDBeforeDatePurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -562,6 +660,19 @@ func (req *userIDFileIDPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByUserIDAndFileID
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find purchases by user id and file id
+// @Accept  json
+// @Produce  json
+// @Param userID path string true "User id"
+// @Param fileID path string true "File id"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/user/{userID}/file/{fileID} [get]
 func (p *purchaseRouter) findByUserIDAndFileIDPurchase(w http.ResponseWriter, r *http.Request) {
 	var req userIDFileIDPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -584,6 +695,16 @@ func (p *purchaseRouter) findByUserIDAndFileIDPurchase(w http.ResponseWriter, r 
 	middleware.JSONReturn(w, http.StatusOK, purchases)
 }
 
+// @Summary FindLast
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find last purchase
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} model.Purchase
+// @Failure 404 {object} middleware.SwagEmptyError "No purchase"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/last/ [get]
 func (p *purchaseRouter) findLast(w http.ResponseWriter, r *http.Request) {
 	purchase, err := p.services.Purchase.FindLast(r.Context())
 	if err != nil {
@@ -599,6 +720,16 @@ func (p *purchaseRouter) findLast(w http.ResponseWriter, r *http.Request) {
 	middleware.JSONReturn(w, http.StatusOK, purchase)
 }
 
+// @Summary FindAll
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find all purchases
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.Purchase
+// @Failure 404 {object} middleware.SwagEmptyError "No purchase"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/ [get]
 func (p *purchaseRouter) findAll(w http.ResponseWriter, r *http.Request) {
 	purchases, err := p.services.Purchase.FindAll(r.Context())
 	if err != nil {
@@ -647,6 +778,18 @@ func (req *periodPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByPeriod
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find by period
+// @Accept  json
+// @Produce  json
+// @Param period body model.PeriodPurchaseRequest true "Period"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/period [post]
 func (p *purchaseRouter) findByPeriodPurchase(w http.ResponseWriter, r *http.Request) {
 	var req periodPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -700,6 +843,18 @@ func (req *afterDatePurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindAfterDate
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find after date
+// @Accept  json
+// @Produce  json
+// @Param period body model.AfterDatePurchaseRequest true "After date"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/after [post]
 func (p *purchaseRouter) findAfterDatePurchase(w http.ResponseWriter, r *http.Request) {
 	var req afterDatePurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -753,6 +908,18 @@ func (req *beforeDatePurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindBeforeDate
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find before date
+// @Accept  json
+// @Produce  json
+// @Param period body model.BeforeDatePurchaseRequest true "Before date"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/before [post]
 func (p *purchaseRouter) findBeforeDatePurchase(w http.ResponseWriter, r *http.Request) {
 	var req beforeDatePurchaseRequest
 	err := middleware.ParseRequest(r, &req)
@@ -801,6 +968,18 @@ func (req *fileIDPurchaseRequest) Validate() error {
 	}
 }
 
+// @Summary FindByFileID
+// @Security ApiKeyAuth
+// @Tags purchase
+// @Description Find purchases by file id
+// @Accept  json
+// @Produce  json
+// @Param fileID path string true "File id"
+// @Success 200 {array} model.Purchase
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No purchases"
+// @Failure 500 {object} middleware.SwagError
+// @Router /purchase/api/file/{fileID} [get]
 func (p *purchaseRouter) findByFileIDPurchase(w http.ResponseWriter, r *http.Request) {
 	var req fileIDPurchaseRequest
 	err := middleware.ParseRequest(r, &req)
