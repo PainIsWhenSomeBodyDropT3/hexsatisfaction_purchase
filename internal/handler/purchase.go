@@ -93,8 +93,6 @@ func newPurchase(services *service.Services, tokenManager auth.TokenManager) pur
 		HandlerFunc(handler.deletePurchase)
 
 	return handler
-
-	return handler
 }
 
 type createPurchaseRequest struct {
