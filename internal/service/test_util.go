@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"log"
 	"os"
 	"strings"
 
@@ -49,7 +48,7 @@ func InitTest4Mock() (*TestAPI, error) {
 func initServices4Test() (*TestAPI, error) {
 	cfg, err := config.Init(configPath)
 	if err != nil {
-		log.Fatal("Init config error: ", err)
+		return nil, errors.Wrap(err, "config file error")
 	}
 	db, err := mongo.NewMongo(context.Background(), cfg.Mongo)
 	if err != nil {
@@ -58,7 +57,7 @@ func initServices4Test() (*TestAPI, error) {
 
 	tokenManager, err := auth.NewManager(cfg.Auth.SigningKey)
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.Wrap(err, "couldn't init token manager")
 	}
 
 	return &TestAPI{
