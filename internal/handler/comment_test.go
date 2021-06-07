@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -68,7 +69,7 @@ func TestComment_Create(t *testing.T) {
 			path:   slash + comment + slash + api + slash,
 			method: http.MethodPost,
 			req: model.CreateCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -84,7 +85,7 @@ func TestComment_Create(t *testing.T) {
 			path:   slash + comment + slash + api + slash,
 			method: http.MethodPost,
 			req: model.CreateCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -171,7 +172,7 @@ func TestComment_Update(t *testing.T) {
 			isOkRes: true,
 			req: model.UpdateCommentRequest{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -188,7 +189,7 @@ func TestComment_Update(t *testing.T) {
 			method: http.MethodPut,
 			req: model.UpdateCommentRequest{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -206,7 +207,7 @@ func TestComment_Update(t *testing.T) {
 			isOkRes: true,
 			req: model.UpdateCommentRequest{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -432,7 +433,7 @@ func TestComment_FindByID(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.CommentDTO{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -530,7 +531,7 @@ func TestComment_FindAll(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -599,7 +600,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 			path:        slash + comment + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req:         model.UserIDCommentRequest{ID: "some"},
+			req:         model.UserIDCommentRequest{},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -612,9 +613,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 			path:        slash + comment + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDCommentRequest{
-				ID: id,
-			},
+			req:         model.UserIDCommentRequest{ID: 1},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, errors.New(""))
@@ -626,7 +625,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 			path:   slash + comment + slash + user + slash,
 			method: http.MethodGet,
 			req: model.UserIDCommentRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
@@ -640,7 +639,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDCommentRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
@@ -650,7 +649,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -669,7 +668,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 				tc.fn(comment, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
 			assert.Nil(err)
 
 			res := httptest.NewRecorder()
@@ -768,7 +767,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -835,7 +834,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			path:        slash + comment + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req:         model.UserPurchaseIDCommentRequest{UserID: "some", PurchaseID: "some"},
+			req:         model.UserPurchaseIDCommentRequest{PurchaseID: "some"},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindByUserIDAndPurchaseID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -849,7 +848,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 			},
 			fn: func(commentService *m.Comment, data test) {
@@ -863,7 +862,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			path:   slash + comment + slash + user + slash,
 			method: http.MethodGet,
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 			},
 			fn: func(commentService *m.Comment, data test) {
@@ -878,7 +877,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 			},
 			fn: func(commentService *m.Comment, data test) {
@@ -889,7 +888,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -907,7 +906,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
-			fullPath := tc.path + tc.req.UserID + slash + purchase + slash + tc.req.PurchaseID
+			fullPath := tc.path + strconv.Itoa(tc.req.UserID) + slash + purchase + slash + tc.req.PurchaseID
 			req, err := http.NewRequest(tc.method, fullPath, nil)
 			assert.Nil(err)
 
@@ -1009,7 +1008,7 @@ func TestComment_FindByText(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -1136,7 +1135,7 @@ func TestComment_FindByPeriod(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",

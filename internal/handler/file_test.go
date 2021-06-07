@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -58,7 +59,6 @@ func TestFile_Create(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    "some",
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Create", mock.Anything, data.req).
@@ -79,7 +79,7 @@ func TestFile_Create(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Create", mock.Anything, data.req).
@@ -99,7 +99,7 @@ func TestFile_Create(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Create", mock.Anything, data.req).
@@ -173,7 +173,7 @@ func TestFile_Update(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Update", mock.Anything, data.req).
@@ -196,7 +196,7 @@ func TestFile_Update(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Update", mock.Anything, data.req).
@@ -217,7 +217,7 @@ func TestFile_Update(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Update", mock.Anything, data.req).
@@ -239,7 +239,7 @@ func TestFile_Update(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("Update", mock.Anything, data.req).
@@ -471,7 +471,7 @@ func TestFile_FindByID(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    id,
+				AuthorID:    1,
 			},
 		},
 	}
@@ -538,9 +538,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 			path:        slash + file + slash + api + slash + author + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.AuthorIDFileRequest{
-				ID: "some",
-			},
+			req:         model.AuthorIDFileRequest{},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindByAuthorID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -554,7 +552,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.AuthorIDFileRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindByAuthorID", mock.Anything, data.req).
@@ -567,7 +565,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 			path:   slash + file + slash + api + slash + author + slash,
 			method: http.MethodGet,
 			req: model.AuthorIDFileRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindByAuthorID", mock.Anything, data.req).
@@ -581,7 +579,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.AuthorIDFileRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindByAuthorID", mock.Anything, data.req).
@@ -598,7 +596,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},
@@ -614,7 +612,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 				tc.fn(file, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -709,7 +707,7 @@ func TestFile_FindByName(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},
@@ -809,7 +807,7 @@ func TestFile_FindActual(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},
@@ -909,7 +907,7 @@ func TestFile_FindNotActual(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      false,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},
@@ -1009,7 +1007,7 @@ func TestFile_FindAll(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      false,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},
@@ -1137,7 +1135,7 @@ func TestFile_FindAddedByPeriod(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},
@@ -1269,7 +1267,7 @@ func TestFile_FindUpdatedByPeriod(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    id,
+					AuthorID:    1,
 				},
 			},
 		},

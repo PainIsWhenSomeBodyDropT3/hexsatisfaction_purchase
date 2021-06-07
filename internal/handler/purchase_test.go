@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -48,7 +49,6 @@ func TestPurchase_Create(t *testing.T) {
 			path:   slash + purchase + slash + api + slash,
 			method: http.MethodPost,
 			req: model.CreatePurchaseRequest{
-				UserID: "some",
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -64,7 +64,7 @@ func TestPurchase_Create(t *testing.T) {
 			path:   slash + purchase + slash + api + slash,
 			method: http.MethodPost,
 			req: model.CreatePurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -79,7 +79,7 @@ func TestPurchase_Create(t *testing.T) {
 			path:   slash + purchase + slash + api + slash,
 			method: http.MethodPost,
 			req: model.CreatePurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -306,7 +306,7 @@ func TestPurchase_FindById(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.PurchaseDTO{
 				ID:     id,
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -375,9 +375,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 			path:        slash + purchase + slash + api + slash + last + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: "some",
-			},
+			req:         model.UserIDPurchaseRequest{},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
 					Return(&data.expRes, nil)
@@ -390,9 +388,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 			path:        slash + purchase + slash + api + slash + last + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: id,
-			},
+			req:         model.UserIDPurchaseRequest{ID: 1},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
 					Return(&data.expRes, errors.New(""))
@@ -404,7 +400,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 			path:   slash + purchase + slash + api + slash + last + slash + user + slash,
 			method: http.MethodGet,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
@@ -418,7 +414,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
@@ -427,7 +423,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.PurchaseDTO{
 				ID:     id,
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -444,7 +440,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -496,9 +492,7 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 			path:        slash + purchase + slash + api + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: "some",
-			},
+			req:         model.UserIDPurchaseRequest{},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -511,9 +505,7 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 			path:        slash + purchase + slash + api + slash + user + slash,
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: id,
-			},
+			req:         model.UserIDPurchaseRequest{ID: 1},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, errors.New(""))
@@ -525,7 +517,7 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 			path:   slash + purchase + slash + api + slash + user + slash,
 			method: http.MethodGet,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
@@ -539,7 +531,7 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
@@ -549,13 +541,13 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -573,7 +565,7 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -626,7 +618,6 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    "some",
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -643,7 +634,7 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -658,7 +649,7 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			path:   slash + purchase + slash + api + slash + period + slash + user + slash,
 			method: http.MethodPost,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -674,7 +665,7 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -686,13 +677,13 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -714,7 +705,7 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -767,7 +758,6 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    "some",
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -783,7 +773,7 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -797,7 +787,7 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			path:   slash + purchase + slash + api + slash + after + slash + user + slash,
 			method: http.MethodPost,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -812,7 +802,7 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -823,13 +813,13 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -851,7 +841,7 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -904,7 +894,6 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  "some",
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -920,7 +909,7 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  id,
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -934,7 +923,7 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			path:   slash + purchase + slash + api + slash + before + slash + user + slash,
 			method: http.MethodPost,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  id,
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -949,7 +938,7 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  id,
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -960,13 +949,13 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -988,7 +977,7 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -1041,7 +1030,6 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: "some",
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1057,7 +1045,7 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1071,7 +1059,7 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 			path:   slash + purchase + slash + api + slash + user + slash,
 			method: http.MethodGet,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1086,7 +1074,7 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1097,13 +1085,13 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1121,7 +1109,7 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			fullPath := tc.path + tc.req.UserID + slash + file + slash + tc.req.FileID
+			fullPath := tc.path + strconv.Itoa(tc.req.UserID) + slash + file + slash + tc.req.FileID
 			req, err := http.NewRequest(tc.method, fullPath, nil)
 			assert.Nil(err)
 
@@ -1204,7 +1192,7 @@ func TestPurchase_FindLast(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.PurchaseDTO{
 				ID:     id,
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -1301,13 +1289,13 @@ func TestPurchase_FindAll(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1433,13 +1421,13 @@ func TestPurchase_FindByPeriod(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1566,13 +1554,13 @@ func TestPurchase_FindAfterDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1699,13 +1687,13 @@ func TestPurchase_FindBeforeDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1832,13 +1820,13 @@ func TestPurchase_FindByFileID(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
