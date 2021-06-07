@@ -43,7 +43,7 @@ func TestCommentRepo_Create(t *testing.T) {
 		{
 			name: "all ok",
 			comment: model.CommentDTO{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				Text:       "some",
@@ -89,7 +89,7 @@ func TestCommentRepo_Update(t *testing.T) {
 			name: "all ok",
 			isOk: true,
 			comment: model.CommentDTO{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				Text:       "some",
@@ -140,7 +140,7 @@ func TestCommentRepo_Delete(t *testing.T) {
 			name: "all ok",
 			isOk: true,
 			comment: model.CommentDTO{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				Text:       "some",
@@ -196,7 +196,7 @@ func TestCommentRepo_DeleteByPurchaseID(t *testing.T) {
 				data.comment.PurchaseID = data.id
 			},
 			comment: model.CommentDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				Text:   "some",
 			},
@@ -254,7 +254,7 @@ func TestCommentRepo_FindByID(t *testing.T) {
 				data.exp = &data.comment
 			},
 			comment: model.CommentDTO{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				Text:       "some",
@@ -319,7 +319,7 @@ func TestCommentRepo_FindByPurchaseID(t *testing.T) {
 			id: primitive.NewObjectID().Hex(),
 			comments: []model.CommentDTO{
 				{
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					Text:   "some",
 				},
@@ -363,7 +363,7 @@ func TestCommentRepo_FindAllByUserID(t *testing.T) {
 	type test struct {
 		name     string
 		isOk     bool
-		id       string
+		id       int
 		fn       func(data *test)
 		comments []model.CommentDTO
 		exp      []model.CommentDTO
@@ -371,12 +371,8 @@ func TestCommentRepo_FindAllByUserID(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name: "not found",
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 		},
 		{
 			name: "all ok",
@@ -387,9 +383,10 @@ func TestCommentRepo_FindAllByUserID(t *testing.T) {
 				}
 				data.exp = data.comments
 			},
-			id: primitive.NewObjectID().Hex(),
+			id: 1,
 			comments: []model.CommentDTO{
 				{
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					Text:       "some",
@@ -434,7 +431,7 @@ func TestCommentRepo_FindAllByUserIDAndPurchaseID(t *testing.T) {
 	type test struct {
 		name       string
 		isOk       bool
-		userID     string
+		userID     int
 		purchaseID string
 		fn         func(data *test)
 		comments   []model.CommentDTO
@@ -448,7 +445,7 @@ func TestCommentRepo_FindAllByUserIDAndPurchaseID(t *testing.T) {
 		},
 		{
 			name:       "not found",
-			userID:     primitive.NewObjectID().Hex(),
+			userID:     1,
 			purchaseID: primitive.NewObjectID().Hex(),
 		},
 		{
@@ -461,7 +458,7 @@ func TestCommentRepo_FindAllByUserIDAndPurchaseID(t *testing.T) {
 				}
 				data.exp = data.comments
 			},
-			userID:     primitive.NewObjectID().Hex(),
+			userID:     1,
 			purchaseID: primitive.NewObjectID().Hex(),
 			comments: []model.CommentDTO{
 				{
@@ -527,7 +524,7 @@ func TestCommentRepo_FindAll(t *testing.T) {
 			},
 			comments: []model.CommentDTO{
 				{
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					Text:       "some",
@@ -591,7 +588,7 @@ func TestCommentRepo_FindByText(t *testing.T) {
 			text: "some",
 			comments: []model.CommentDTO{
 				{
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					Text:       "some thing",
@@ -658,7 +655,7 @@ func TestCommentRepo_FindAllByPeriod(t *testing.T) {
 			end:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 			comments: []model.CommentDTO{
 				{
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					Text:       "some",

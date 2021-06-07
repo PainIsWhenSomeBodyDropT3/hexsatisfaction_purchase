@@ -49,7 +49,7 @@ func TestFileRepo_Create(t *testing.T) {
 				AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
 				Actual:      false,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 		},
 	}
@@ -99,7 +99,7 @@ func TestFileRepo_Update(t *testing.T) {
 				AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
 				Actual:      false,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 		},
 	}
@@ -154,7 +154,7 @@ func TestFileRepo_Delete(t *testing.T) {
 				AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
 				Actual:      false,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 		},
 	}
@@ -184,25 +184,21 @@ func TestFileRepo_DeleteByAuthorID(t *testing.T) {
 	type test struct {
 		name   string
 		isOk   bool
-		id     string
+		id     int
 		fn     func(data *test)
 		file   model.FileDTO
 		expErr error
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name:   "not found",
-			id:     primitive.NewObjectID().Hex(),
+			id:     1,
 			expErr: errors.New("mongo: no documents in result"),
 		},
 		{
 			name: "all ok",
 			isOk: true,
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 			fn: func(data *test) {
 				data.file.AuthorID = data.id
 			},
@@ -275,7 +271,7 @@ func TestFileRepo_FindByID(t *testing.T) {
 				Path:        "some",
 				AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 				Actual:      false,
 			},
 			exp: &model.FileDTO{},
@@ -337,7 +333,7 @@ func TestFileRepo_FindByName(t *testing.T) {
 					Path:        "some",
 					AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 					Actual:      false,
 				},
 			},
@@ -403,7 +399,7 @@ func TestFileRepo_FindAll(t *testing.T) {
 					Path:        "some",
 					AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 					Actual:      false,
 				},
 			},
@@ -445,7 +441,7 @@ func TestFileRepo_FindByAuthorID(t *testing.T) {
 	type test struct {
 		name   string
 		isOk   bool
-		id     string
+		id     int
 		fn     func(data *test)
 		files  []model.FileDTO
 		exp    []model.FileDTO
@@ -453,12 +449,8 @@ func TestFileRepo_FindByAuthorID(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name: "not found",
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 		},
 		{
 			name: "all ok",
@@ -469,7 +461,7 @@ func TestFileRepo_FindByAuthorID(t *testing.T) {
 				}
 				data.exp = data.files
 			},
-			id: primitive.NewObjectID().Hex(),
+			id: 1,
 			files: []model.FileDTO{
 				{
 					Name:        "some",
@@ -543,7 +535,7 @@ func TestFileRepo_FindActual(t *testing.T) {
 					Path:        "some",
 					AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 					Actual:      true,
 				},
 			},
@@ -608,7 +600,7 @@ func TestFileRepo_FindNotActual(t *testing.T) {
 					Path:        "some",
 					AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 					Actual:      false,
 				},
 			},
@@ -679,7 +671,7 @@ func TestFileRepo_FindAddedByPeriod(t *testing.T) {
 					Path:        "some",
 					AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 					Actual:      false,
 				},
 			},
@@ -750,7 +742,7 @@ func TestFileRepo_FindUpdatedByPeriod(t *testing.T) {
 					Path:        "some",
 					AddDate:     time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					UpdateDate:  time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 					Actual:      false,
 				},
 			},
