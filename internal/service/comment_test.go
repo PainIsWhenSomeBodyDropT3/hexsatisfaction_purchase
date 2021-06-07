@@ -10,12 +10,15 @@ import (
 	"github.com/pkg/errors"
 	testAssert "github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestCommentService_Create(t *testing.T) {
 	primitive.NewObjectID().Hex()
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.CreateCommentRequest
@@ -67,7 +70,7 @@ func TestCommentService_Create(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
@@ -82,6 +85,8 @@ func TestCommentService_Create(t *testing.T) {
 
 func TestCommentService_Update(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.UpdateCommentRequest
@@ -135,7 +140,7 @@ func TestCommentService_Update(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
@@ -150,6 +155,8 @@ func TestCommentService_Update(t *testing.T) {
 
 func TestCommentService_Delete(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.DeleteCommentRequest
@@ -185,7 +192,7 @@ func TestCommentService_Delete(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
@@ -200,6 +207,8 @@ func TestCommentService_Delete(t *testing.T) {
 
 func TestCommentService_FindByID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.IDCommentRequest
@@ -241,7 +250,7 @@ func TestCommentService_FindByID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
@@ -256,6 +265,8 @@ func TestCommentService_FindByID(t *testing.T) {
 
 func TestCommentService_FindAllByUserID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.UserIDCommentRequest
@@ -307,7 +318,7 @@ func TestCommentService_FindAllByUserID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, &tc)
 			}
@@ -322,6 +333,8 @@ func TestCommentService_FindAllByUserID(t *testing.T) {
 
 func TestCommentService_FindAllByPurchaseID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.PurchaseIDCommentRequest
@@ -373,7 +386,7 @@ func TestCommentService_FindAllByPurchaseID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, &tc)
 			}
@@ -388,6 +401,8 @@ func TestCommentService_FindAllByPurchaseID(t *testing.T) {
 
 func TestCommentService_FindByUserIDAndPurchaseID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.UserPurchaseIDCommentRequest
@@ -440,7 +455,7 @@ func TestCommentService_FindByUserIDAndPurchaseID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, &tc)
 			}
@@ -455,6 +470,8 @@ func TestCommentService_FindByUserIDAndPurchaseID(t *testing.T) {
 
 func TestCommentService_FindAll(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		fn     func(comment *m.Comment, data test)
@@ -499,7 +516,7 @@ func TestCommentService_FindAll(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
@@ -514,6 +531,8 @@ func TestCommentService_FindAll(t *testing.T) {
 
 func TestCommentService_FindByText(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.TextCommentRequest
@@ -564,7 +583,7 @@ func TestCommentService_FindByText(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
@@ -579,6 +598,8 @@ func TestCommentService_FindByText(t *testing.T) {
 
 func TestCommentService_FindByPeriod(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.PeriodCommentRequest
@@ -631,7 +652,7 @@ func TestCommentService_FindByPeriod(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			comment := new(m.Comment)
 			ctx := context.Background()
-			service := NewCommentService(comment)
+			service := NewCommentService(comment, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}

@@ -12,11 +12,12 @@ import (
 // FileService is a file service.
 type FileService struct {
 	repository.File
+	client api.ExistanceClient
 }
 
 // NewFileService is a FileService service constructor.
 func NewFileService(file repository.File, client api.ExistanceClient) *FileService {
-	return &FileService{file}
+	return &FileService{file, client}
 }
 
 // Create creates new file and returns id.

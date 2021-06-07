@@ -75,7 +75,7 @@ type Deps struct {
 func NewServices(deps Deps) *Services {
 	return &Services{
 		Purchase: NewPurchaseService(deps.Repos.Purchase, deps.GRPCClient),
-		Comment:  NewCommentService(deps.Repos.Comment),
+		Comment:  NewCommentService(deps.Repos.Comment, deps.GRPCClient),
 		File:     NewFileService(deps.Repos.File, deps.GRPCClient),
 	}
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/JesusG2000/hexsatisfaction/pkg/grpc/api"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/repository"
 	"github.com/pkg/errors"
@@ -11,11 +12,12 @@ import (
 // CommentService is a purchase service.
 type CommentService struct {
 	repository.Comment
+	client api.ExistanceClient
 }
 
 // NewCommentService is a CommentService service constructor.
-func NewCommentService(comment repository.Comment) *CommentService {
-	return &CommentService{comment}
+func NewCommentService(comment repository.Comment, client api.ExistanceClient) *CommentService {
+	return &CommentService{comment, client}
 }
 
 // Create creates comments and returns id.
