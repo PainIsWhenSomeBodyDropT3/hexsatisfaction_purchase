@@ -100,23 +100,19 @@ func (f FileRepo) Delete(context context.Context, id string) (string, error) {
 }
 
 // DeleteByAuthorID deletes purchase by authorID and returns authorID.
-func (f FileRepo) DeleteByAuthorID(context context.Context, id string) (string, error) {
+func (f FileRepo) DeleteByAuthorID(context context.Context, id int) (int, error) {
 	opts := options.FindOneAndDelete().SetProjection(bson.D{{"authorID", 1}})
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return "", err
-	}
 
 	query := bson.M{
-		"authorID": objID,
+		"authorID": id,
 	}
 	var delFile model.File
-	err = f.collection.FindOneAndDelete(context, query, opts).Decode(&delFile)
+	err := f.collection.FindOneAndDelete(context, query, opts).Decode(&delFile)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
-	return delFile.AuthorID.Hex(), nil
+	return delFile.AuthorID, nil
 }
 
 // FindByID finds purchase by userID.
@@ -175,14 +171,9 @@ func (f FileRepo) FindAll(context context.Context) ([]model.FileDTO, error) {
 }
 
 // FindByAuthorID finds purchases by author userID.
-func (f FileRepo) FindByAuthorID(context context.Context, id string) ([]model.FileDTO, error) {
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (f FileRepo) FindByAuthorID(context context.Context, id int) ([]model.FileDTO, error) {
 	query := bson.M{
-		"authorID": objID,
+		"authorID": id,
 	}
 	var files model.Files
 	cursor, err := f.collection.Find(context, query)
