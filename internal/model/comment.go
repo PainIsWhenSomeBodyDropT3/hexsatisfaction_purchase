@@ -20,7 +20,7 @@ type Comment mongo.Comment
 // Comment represents dto of a comment model.
 type CommentDTO struct {
 	ID         string    `json:"id,omitempty"`
-	UserID     string    `json:"userID"`
+	UserID     int       `json:"userID"`
 	PurchaseID string    `json:"purchaseID"`
 	Date       time.Time `json:"date"`
 	Text       string    `json:"text"`
@@ -29,20 +29,15 @@ type CommentDTO struct {
 // Entity converts CommentDTO to Comment.
 func (c CommentDTO) Entity() (*Comment, error) {
 	comment := Comment{
-		Date: c.Date,
-		Text: c.Text,
+		UserID: c.UserID,
+		Date:   c.Date,
+		Text:   c.Text,
 	}
 	var err error
 	if c.ID != "" {
 		comment.ID, err = primitive.ObjectIDFromHex(c.ID)
 		if err != nil {
 			return nil, errors.Wrap(err, "invalid id")
-		}
-	}
-	if c.UserID != "" {
-		comment.UserID, err = primitive.ObjectIDFromHex(c.UserID)
-		if err != nil {
-			return nil, errors.Wrap(err, "invalid user id")
 		}
 	}
 	if c.PurchaseID != "" {
@@ -59,7 +54,7 @@ func (c CommentDTO) Entity() (*Comment, error) {
 func (c Comment) DTO() *CommentDTO {
 	comment := CommentDTO{
 		ID:         c.ID.Hex(),
-		UserID:     c.UserID.Hex(),
+		UserID:     c.UserID,
 		PurchaseID: c.PurchaseID.Hex(),
 		Date:       c.Date,
 		Text:       c.Text,

@@ -7,7 +7,7 @@ type (
 	// CreatePurchaseRequest represents a request to create purchase.
 	CreatePurchaseRequest struct {
 		// required: true
-		UserID string `json:"userID"`
+		UserID int `json:"userID"`
 		// required: true
 		Date time.Time `json:"date"`
 		// required: true
@@ -29,13 +29,13 @@ type (
 	// UserIDPurchaseRequest represents a request to find last added purchase by user id.
 	UserIDPurchaseRequest struct {
 		// required: true
-		ID string `json:"-"`
+		ID int `json:"-"`
 	}
 
 	// UserIDPeriodPurchaseRequest represents a request to find all purchases by user id and date period.
 	UserIDPeriodPurchaseRequest struct {
 		// required: true
-		ID string `json:"-"`
+		ID int `json:"-"`
 		// required: true
 		Start time.Time `json:"start"`
 		// required: true
@@ -45,7 +45,7 @@ type (
 	// UserIDAfterDatePurchaseRequest represents a request to find all purchases by user id after date.
 	UserIDAfterDatePurchaseRequest struct {
 		// required: true
-		ID string `json:"-"`
+		ID int `json:"-"`
 		// required: true
 		Start time.Time `json:"start"`
 	}
@@ -53,7 +53,7 @@ type (
 	// UserIDBeforeDatePurchaseRequest represents a request to find all purchases by user id before date.
 	UserIDBeforeDatePurchaseRequest struct {
 		// required: true
-		ID string `json:"-"`
+		ID int `json:"-"`
 		// required: true
 		End time.Time `json:"end"`
 	}
@@ -61,7 +61,7 @@ type (
 	// UserIDFileIDPurchaseRequest represents a request to find all purchases by user id and file name.
 	UserIDFileIDPurchaseRequest struct {
 		// required: true
-		UserID string `json:"-"`
+		UserID int `json:"-"`
 		// required: true
 		FileID string `json:"fileID"`
 	}
@@ -98,7 +98,7 @@ type (
 	// CreateCommentRequest represents a request to create comment.
 	CreateCommentRequest struct {
 		// required: true
-		UserID string `json:"userID"`
+		UserID int `json:"userID"`
 		// required: true
 		PurchaseID string `json:"purchaseID"`
 		// required: true
@@ -112,7 +112,7 @@ type (
 		// required: true
 		ID string `json:"-"`
 		// required: true
-		UserID string `json:"userID"`
+		UserID int `json:"userID"`
 		// required: true
 		PurchaseID string `json:"purchaseID"`
 		// required: true
@@ -136,7 +136,7 @@ type (
 	// UserIDCommentRequest represents a request to find comments by user id.
 	UserIDCommentRequest struct {
 		// required: true
-		ID string `json:"-"`
+		ID int `json:"-"`
 	}
 
 	// PurchaseIDCommentRequest represents a request to find comments by purchase id.
@@ -148,7 +148,7 @@ type (
 	// UserPurchaseIDCommentRequest represents a request to find comments by purchase and user ids.
 	UserPurchaseIDCommentRequest struct {
 		// required: true
-		UserID     string `json:"-"`
+		UserID     int    `json:"-"`
 		PurchaseID string `json:"-"`
 	}
 
@@ -185,7 +185,7 @@ type (
 		// required: true
 		Actual bool `json:"actual"`
 		// required: true
-		AuthorID string `json:"authorID"`
+		AuthorID int `json:"authorID"`
 	}
 
 	// UpdateFileRequest represents a request to update file.
@@ -207,7 +207,7 @@ type (
 		// required: true
 		Actual bool `json:"actual"`
 		// required: true
-		AuthorID string `json:"authorID"`
+		AuthorID int `json:"authorID"`
 	}
 
 	// DeleteFileRequest represents a request to delete file.
@@ -231,7 +231,7 @@ type (
 	// AuthorIDFileRequest represents a request to find files by author id.
 	AuthorIDFileRequest struct {
 		// required: true
-		ID string `json:"-"`
+		ID int `json:"-"`
 	}
 
 	// AddedPeriodFileRequest represents a request to find added files by date period.
