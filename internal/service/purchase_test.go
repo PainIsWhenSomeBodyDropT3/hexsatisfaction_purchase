@@ -10,11 +10,15 @@ import (
 	"github.com/pkg/errors"
 	testAssert "github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestPurchaseService_Create(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
+
 	type test struct {
 		name   string
 		req    model.CreatePurchaseRequest
@@ -62,7 +66,7 @@ func TestPurchaseService_Create(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)
@@ -78,6 +82,8 @@ func TestPurchaseService_Create(t *testing.T) {
 
 func TestPurchaseService_Delete(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.DeletePurchaseRequest
@@ -114,7 +120,7 @@ func TestPurchaseService_Delete(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -130,6 +136,8 @@ func TestPurchaseService_Delete(t *testing.T) {
 
 func TestPurchaseService_FindById(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.IDPurchaseRequest
@@ -170,7 +178,7 @@ func TestPurchaseService_FindById(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -186,6 +194,8 @@ func TestPurchaseService_FindById(t *testing.T) {
 
 func TestPurchaseService_FindLastByUserId(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.UserIDPurchaseRequest
@@ -226,7 +236,7 @@ func TestPurchaseService_FindLastByUserId(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -242,6 +252,8 @@ func TestPurchaseService_FindLastByUserId(t *testing.T) {
 
 func TestPurchaseService_FindAllByUserId(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.UserIDPurchaseRequest
@@ -291,7 +303,7 @@ func TestPurchaseService_FindAllByUserId(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -307,6 +319,8 @@ func TestPurchaseService_FindAllByUserId(t *testing.T) {
 
 func TestPurchaseService_FindByUserIdAndPeriod(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.UserIDPeriodPurchaseRequest
@@ -360,7 +374,7 @@ func TestPurchaseService_FindByUserIdAndPeriod(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -376,6 +390,8 @@ func TestPurchaseService_FindByUserIdAndPeriod(t *testing.T) {
 
 func TestPurchaseService_FindByUserIdAfterDate(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.UserIDAfterDatePurchaseRequest
@@ -427,7 +443,7 @@ func TestPurchaseService_FindByUserIdAfterDate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -443,6 +459,8 @@ func TestPurchaseService_FindByUserIdAfterDate(t *testing.T) {
 
 func TestPurchaseService_FindByUserIdBeforeDate(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.UserIDBeforeDatePurchaseRequest
@@ -494,7 +512,7 @@ func TestPurchaseService_FindByUserIdBeforeDate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -510,6 +528,8 @@ func TestPurchaseService_FindByUserIdBeforeDate(t *testing.T) {
 
 func TestPurchaseService_FindByUserIdAndFileID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.UserIDFileIDPurchaseRequest
@@ -560,7 +580,7 @@ func TestPurchaseService_FindByUserIdAndFileID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, &tc)
@@ -576,6 +596,8 @@ func TestPurchaseService_FindByUserIdAndFileID(t *testing.T) {
 
 func TestPurchaseService_FindLast(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		fn          func(purchase *m.Purchase, data test)
@@ -609,7 +631,7 @@ func TestPurchaseService_FindLast(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)
@@ -625,6 +647,8 @@ func TestPurchaseService_FindLast(t *testing.T) {
 
 func TestPurchaseService_FindAll(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		fn          func(purchase *m.Purchase, data test)
@@ -666,7 +690,7 @@ func TestPurchaseService_FindAll(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)
@@ -682,6 +706,8 @@ func TestPurchaseService_FindAll(t *testing.T) {
 
 func TestPurchaseService_FindByPeriod(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.PeriodPurchaseRequest
@@ -732,7 +758,7 @@ func TestPurchaseService_FindByPeriod(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)
@@ -748,6 +774,8 @@ func TestPurchaseService_FindByPeriod(t *testing.T) {
 
 func TestPurchaseService_FindAfterDate(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.AfterDatePurchaseRequest
@@ -796,7 +824,7 @@ func TestPurchaseService_FindAfterDate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)
@@ -812,6 +840,8 @@ func TestPurchaseService_FindAfterDate(t *testing.T) {
 
 func TestPurchaseService_FindBeforeDate(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.BeforeDatePurchaseRequest
@@ -857,7 +887,7 @@ func TestPurchaseService_FindBeforeDate(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)
@@ -873,6 +903,8 @@ func TestPurchaseService_FindBeforeDate(t *testing.T) {
 
 func TestPurchaseService_FindByFileID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name        string
 		req         model.FileIDPurchaseRequest
@@ -922,7 +954,7 @@ func TestPurchaseService_FindByFileID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			purchase := new(m.Purchase)
 			ctx := context.Background()
-			service := NewPurchaseService(purchase)
+			service := NewPurchaseService(purchase, testApi.GRPCClient)
 
 			if tc.fn != nil {
 				tc.fn(purchase, tc)

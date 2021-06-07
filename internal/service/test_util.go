@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"net"
 	"os"
 	"strings"
 
+	"github.com/JesusG2000/hexsatisfaction/pkg/grpc/api"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/config"
+	"github.com/JesusG2000/hexsatisfaction_purchase/internal/grpc"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/repository"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/auth"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/database/mongo"
@@ -18,6 +21,7 @@ import (
 type TestAPI struct {
 	*Services
 	auth.TokenManager
+	GRPCClient api.ExistanceClient
 }
 
 const configPath = "config/main"
@@ -60,11 +64,19 @@ func initServices4Test() (*TestAPI, error) {
 		return nil, errors.Wrap(err, "couldn't init token manager")
 	}
 
+	addr := net.JoinHostPort(cfg.GRPC.Host, cfg.GRPC.Port)
+	grpcClient, err := grpc.NewGRPCClient(addr)
+	if err != nil {
+		return nil, errors.Wrap(err, "couldn't init grpc client")
+	}
+
 	return &TestAPI{
 		Services: NewServices(Deps{
 			Repos:        repository.NewRepositories(db),
 			TokenManager: tokenManager,
+			GRPCClient:   grpcClient,
 		}),
 		TokenManager: tokenManager,
+		GRPCClient:   grpcClient,
 	}, nil
 }

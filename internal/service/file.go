@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/JesusG2000/hexsatisfaction/pkg/grpc/api"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/repository"
 	"github.com/pkg/errors"
@@ -14,7 +15,7 @@ type FileService struct {
 }
 
 // NewFileService is a FileService service constructor.
-func NewFileService(file repository.File) *FileService {
+func NewFileService(file repository.File, client api.ExistanceClient) *FileService {
 	return &FileService{file}
 }
 

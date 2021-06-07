@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/JesusG2000/hexsatisfaction/pkg/grpc/api"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/repository"
 	"github.com/pkg/errors"
@@ -11,11 +12,12 @@ import (
 // PurchaseService is a purchase service.
 type PurchaseService struct {
 	repository.Purchase
+	client api.ExistanceClient
 }
 
 // NewPurchaseService is a PurchaseService service constructor.
-func NewPurchaseService(purchase repository.Purchase) *PurchaseService {
-	return &PurchaseService{purchase}
+func NewPurchaseService(purchase repository.Purchase, client api.ExistanceClient) *PurchaseService {
+	return &PurchaseService{purchase, client}
 }
 
 // Create creates new purchase and returns id.
