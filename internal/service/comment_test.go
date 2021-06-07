@@ -30,7 +30,7 @@ func TestCommentService_Create(t *testing.T) {
 		{
 			name: "Create errors",
 			req: model.CreateCommentRequest{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -49,7 +49,7 @@ func TestCommentService_Create(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.CreateCommentRequest{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -99,7 +99,7 @@ func TestCommentService_Update(t *testing.T) {
 			name: "Update errors",
 			req: model.UpdateCommentRequest{
 				ID:         primitive.NewObjectID().Hex(),
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -119,7 +119,7 @@ func TestCommentService_Update(t *testing.T) {
 			name: "All ok",
 			req: model.UpdateCommentRequest{
 				ID:         primitive.NewObjectID().Hex(),
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -239,7 +239,7 @@ func TestCommentService_FindByID(t *testing.T) {
 			},
 			exp: &model.CommentDTO{
 				ID:         primitive.NewObjectID().Hex(),
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 				Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -278,7 +278,7 @@ func TestCommentService_FindAllByUserID(t *testing.T) {
 		{
 			name: "Find errors",
 			req: model.UserIDCommentRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(comment *m.Comment, data *test) {
 				comment.On("FindAllByUserID", mock.Anything, data.req.ID).
@@ -289,7 +289,7 @@ func TestCommentService_FindAllByUserID(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDCommentRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(comment *m.Comment, data *test) {
 				for i := range data.exp {
@@ -369,13 +369,13 @@ func TestCommentService_FindAllByPurchaseID(t *testing.T) {
 			exp: []model.CommentDTO{
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:   "some text1",
 				},
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					Text:   "some text2",
 				},
@@ -414,7 +414,7 @@ func TestCommentService_FindByUserIDAndPurchaseID(t *testing.T) {
 		{
 			name: "Find errors",
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 			},
 			fn: func(comment *m.Comment, data *test) {
@@ -426,7 +426,7 @@ func TestCommentService_FindByUserIDAndPurchaseID(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     primitive.NewObjectID().Hex(),
+				UserID:     1,
 				PurchaseID: primitive.NewObjectID().Hex(),
 			},
 			fn: func(comment *m.Comment, data *test) {
@@ -497,14 +497,14 @@ func TestCommentService_FindAll(t *testing.T) {
 			exp: []model.CommentDTO{
 				{
 					ID:         primitive.NewObjectID().Hex(),
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text1",
 				},
 				{
 					ID:         primitive.NewObjectID().Hex(),
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text2",
@@ -564,14 +564,14 @@ func TestCommentService_FindByText(t *testing.T) {
 			exp: []model.CommentDTO{
 				{
 					ID:         primitive.NewObjectID().Hex(),
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text1",
 				},
 				{
 					ID:         primitive.NewObjectID().Hex(),
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text2",
@@ -633,14 +633,14 @@ func TestCommentService_FindByPeriod(t *testing.T) {
 			exp: []model.CommentDTO{
 				{
 					ID:         primitive.NewObjectID().Hex(),
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text1",
 				},
 				{
 					ID:         primitive.NewObjectID().Hex(),
-					UserID:     primitive.NewObjectID().Hex(),
+					UserID:     1,
 					PurchaseID: primitive.NewObjectID().Hex(),
 					Date:       time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text2",

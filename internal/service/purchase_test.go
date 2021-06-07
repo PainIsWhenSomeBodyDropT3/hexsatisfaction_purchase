@@ -30,7 +30,7 @@ func TestPurchaseService_Create(t *testing.T) {
 		{
 			name: "Create errors",
 			req: model.CreatePurchaseRequest{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -47,7 +47,7 @@ func TestPurchaseService_Create(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.CreatePurchaseRequest{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -168,7 +168,7 @@ func TestPurchaseService_FindById(t *testing.T) {
 					Return(data.expPurchase, nil)
 			},
 			expPurchase: &model.PurchaseDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -207,7 +207,7 @@ func TestPurchaseService_FindLastByUserId(t *testing.T) {
 		{
 			name: "FindLastByUserID errors",
 			req: model.UserIDPurchaseRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(purchase *m.Purchase, data *test) {
 				purchase.On("FindLastByUserID", mock.Anything, data.req.ID).
@@ -218,7 +218,7 @@ func TestPurchaseService_FindLastByUserId(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDPurchaseRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(purchase *m.Purchase, data *test) {
 				data.expPurchase.UserID = data.req.ID
@@ -265,7 +265,7 @@ func TestPurchaseService_FindAllByUserId(t *testing.T) {
 		{
 			name: "FindAllByUserID errors",
 			req: model.UserIDPurchaseRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(purchase *m.Purchase, data *test) {
 				purchase.On("FindAllByUserID", mock.Anything, data.req.ID).
@@ -276,7 +276,7 @@ func TestPurchaseService_FindAllByUserId(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDPurchaseRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(purchase *m.Purchase, data *test) {
 				for i := range data.expPurchase {
@@ -332,7 +332,7 @@ func TestPurchaseService_FindByUserIdAndPeriod(t *testing.T) {
 		{
 			name: "FindByUserIDAndPeriod errors",
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    primitive.NewObjectID().Hex(),
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -345,7 +345,7 @@ func TestPurchaseService_FindByUserIdAndPeriod(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    primitive.NewObjectID().Hex(),
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -403,7 +403,7 @@ func TestPurchaseService_FindByUserIdAfterDate(t *testing.T) {
 		{
 			name: "FindByUserIDAfterDate errors",
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    primitive.NewObjectID().Hex(),
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchase *m.Purchase, data *test) {
@@ -415,7 +415,7 @@ func TestPurchaseService_FindByUserIdAfterDate(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    primitive.NewObjectID().Hex(),
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchase *m.Purchase, data *test) {
@@ -472,7 +472,7 @@ func TestPurchaseService_FindByUserIdBeforeDate(t *testing.T) {
 		{
 			name: "FindByUserIDBeforeDate errors",
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  primitive.NewObjectID().Hex(),
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchase *m.Purchase, data *test) {
@@ -484,7 +484,7 @@ func TestPurchaseService_FindByUserIdBeforeDate(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  primitive.NewObjectID().Hex(),
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchase *m.Purchase, data *test) {
@@ -541,7 +541,7 @@ func TestPurchaseService_FindByUserIdAndFileID(t *testing.T) {
 		{
 			name: "FindByUserIDAndFileID errors",
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				FileID: primitive.NewObjectID().Hex(),
 			},
 			fn: func(purchase *m.Purchase, data *test) {
@@ -553,7 +553,7 @@ func TestPurchaseService_FindByUserIdAndFileID(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				FileID: primitive.NewObjectID().Hex(),
 			},
 			fn: func(purchase *m.Purchase, data *test) {
@@ -621,7 +621,7 @@ func TestPurchaseService_FindLast(t *testing.T) {
 			},
 			expPurchase: &model.PurchaseDTO{
 				ID:     primitive.NewObjectID().Hex(),
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -673,13 +673,13 @@ func TestPurchaseService_FindAll(t *testing.T) {
 			expPurchase: []model.PurchaseDTO{
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -741,13 +741,13 @@ func TestPurchaseService_FindByPeriod(t *testing.T) {
 			expPurchase: []model.PurchaseDTO{
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -807,13 +807,13 @@ func TestPurchaseService_FindAfterDate(t *testing.T) {
 			expPurchase: []model.PurchaseDTO{
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -870,13 +870,13 @@ func TestPurchaseService_FindBeforeDate(t *testing.T) {
 			expPurchase: []model.PurchaseDTO{
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -939,12 +939,12 @@ func TestPurchaseService_FindByFileID(t *testing.T) {
 			expPurchase: []model.PurchaseDTO{
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				},
 				{
 					ID:     primitive.NewObjectID().Hex(),
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 				},
 			},
