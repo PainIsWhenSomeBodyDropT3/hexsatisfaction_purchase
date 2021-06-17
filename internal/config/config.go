@@ -1,13 +1,10 @@
 package config
 
 import (
-	"os"
-	"strings"
 	"time"
 
-	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/envconfig"
 	"github.com/pkg/errors"
-	"github.com/spf13/viper"
 )
 
 type (
@@ -18,148 +15,59 @@ type (
 		HTTP  HTTPConfig
 		GRPC  GRPCConfig
 	}
-	// PgConfig represents a structure with configs for mongo database.
+	// MongoConfig represents a structure with configs for mongo database.
 	MongoConfig struct {
-		URI     string
-		Host    string
-		Port    int
-		Name    string
-		Dialect string
+		URI             string
+		Host            string `required:"true"`
+		Port            int    `required:"true"`
+		DatabaseName    string `split_words:"true" required:"true"`
+		DatabaseDialect string `split_words:"true" required:"true"`
 	}
 	// JWTConfig represents a structure with configs for jwt-token.
 	JWTConfig struct {
-		SigningKey string
+		SigningKey string `split_words:"true" required:"true"`
 	}
 	// HTTPConfig represents a structure with configs for http server.
 	HTTPConfig struct {
-		Port           int
-		MaxHeaderBytes int
-		ReadTimeout    time.Duration
-		WriteTimeout   time.Duration
+		Port           int           `required:"true"`
+		MaxHeaderBytes int           `split_words:"true" required:"true"`
+		ReadTimeout    time.Duration `split_words:"true" required:"true"`
+		WriteTimeout   time.Duration `split_words:"true" required:"true"`
 	}
 	// GRPCConfig represents a structure with configs for grpc.
 	GRPCConfig struct {
-		Host string
-		Port string
+		Host string `required:"true"`
+		Port string `required:"true"`
 	}
 )
 
-// Init populates Config struct with values from config file located at filepath and environment variables.
-func Init(path string) (*Config, error) {
+const (
+	MONGO = "MONGO"
+	JWT   = "JWT"
+	HTTP  = "HTTP"
+	GRPC  = "GRPC"
+)
 
-	if err := parseConfigFile(path); err != nil {
-		return nil, errors.Wrap(err, "couldn't parse config file")
-	}
-
-	if err := parseEnv(); err != nil {
-		return nil, errors.Wrap(err, "couldn't parse env file")
-	}
+// Init populates Config struct with values.
+func Init() (*Config, error) {
 
 	var cfg Config
-	if err := unmarshal(&cfg); err != nil {
-		return nil, errors.Wrap(err, "couldn't parse config file")
+
+	if err := envconfig.Process(MONGO, &cfg.Mongo); err != nil {
+		return nil, errors.Wrap(err, "couldn't process mongo")
 	}
 
-	setFromEnv(&cfg)
+	if err := envconfig.Process(JWT, &cfg.Auth); err != nil {
+		return nil, errors.Wrap(err, "couldn't process jwt")
+	}
+
+	if err := envconfig.Process(HTTP, &cfg.HTTP); err != nil {
+		return nil, errors.Wrap(err, "couldn't process http")
+	}
+
+	if err := envconfig.Process(GRPC, &cfg.GRPC); err != nil {
+		return nil, errors.Wrap(err, "couldn't process grpc")
+	}
 
 	return &cfg, nil
-}
-
-func parseConfigFile(filepath string) error {
-	envPath, err := os.Getwd()
-	if err != nil {
-		return errors.Wrap(err, "couldn't get path to current directory")
-	}
-	envPath = strings.SplitAfter(envPath, "hexsatisfaction_purchase")[0]
-	if err := godotenv.Load(envPath + "/" + ".env"); err != nil {
-		return errors.Wrap(err, "couldn't load env file")
-	}
-
-	configPath := strings.Split(filepath, "/")
-
-	viper.AddConfigPath(envPath + "/" + configPath[0])
-	viper.SetConfigName(configPath[1])
-
-	if err := viper.ReadInConfig(); err != nil {
-		return errors.Wrap(err, "couldn't load config file")
-	}
-
-	return nil
-}
-
-func parseEnv() error {
-	if err := parseMongo(); err != nil {
-		return errors.Wrap(err, "couldn't parse mongo")
-	}
-
-	if err := parseJWT(); err != nil {
-		return errors.Wrap(err, "couldn't parse jwt")
-	}
-
-	return nil
-}
-
-func parseMongo() error {
-	viper.SetEnvPrefix("mongo")
-	if err := viper.BindEnv("host"); err != nil {
-		return errors.Wrap(err, "couldn't bind host")
-	}
-
-	if err := viper.BindEnv("port"); err != nil {
-		return errors.Wrap(err, "couldn't bind port")
-	}
-
-	return nil
-}
-
-func parseJWT() error {
-	viper.SetEnvPrefix("jwt")
-	if err := viper.BindEnv("signing_key"); err != nil {
-		return errors.Wrap(err, "couldn't bind signing_key")
-	}
-
-	return nil
-}
-
-func unmarshal(cfg *Config) error {
-	if err := viper.UnmarshalKey("http.port", &cfg.HTTP.Port); err != nil {
-		return errors.Wrap(err, "couldn't get port")
-	}
-
-	if err := viper.UnmarshalKey("http.maxHeaderBytes", &cfg.HTTP.MaxHeaderBytes); err != nil {
-		return errors.Wrap(err, "couldn't get maxHeaderBytes")
-	}
-
-	if err := viper.UnmarshalKey("http.readTimeout", &cfg.HTTP.ReadTimeout); err != nil {
-		return errors.Wrap(err, "couldn't get readTimeout")
-	}
-
-	if err := viper.UnmarshalKey("http.writeTimeout", &cfg.HTTP.WriteTimeout); err != nil {
-		return errors.Wrap(err, "couldn't get writeTimeout")
-	}
-
-	if err := viper.UnmarshalKey("mongo.databaseName", &cfg.Mongo.Name); err != nil {
-		return errors.Wrap(err, "couldn't get databaseName")
-	}
-
-	if err := viper.UnmarshalKey("mongo.databaseDialect", &cfg.Mongo.Dialect); err != nil {
-		return errors.Wrap(err, "couldn't get databaseDialect")
-	}
-
-	if err := viper.UnmarshalKey("grpc.host", &cfg.GRPC.Host); err != nil {
-		return errors.Wrap(err, "couldn't unmarshal GRPC.Host")
-	}
-
-	if err := viper.UnmarshalKey("grpc.port", &cfg.GRPC.Port); err != nil {
-		return errors.Wrap(err, "couldn't unmarshal GRPC.Port")
-	}
-
-	return nil
-}
-
-func setFromEnv(cfg *Config) {
-	cfg.Auth.SigningKey = viper.GetString("signing_key")
-
-	cfg.Mongo.Host = viper.GetString("host")
-	cfg.Mongo.Port = viper.GetInt("port")
 }
