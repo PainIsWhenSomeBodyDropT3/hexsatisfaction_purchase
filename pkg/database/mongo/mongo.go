@@ -16,7 +16,7 @@ const timeout = 5
 
 // NewMongo creates new connection to mongo database.
 func NewMongo(ctx context.Context, cfg config.MongoConfig) (*mongo.Database, error) {
-	cfg.URI = fmt.Sprintf("%s://%s:%d", cfg.Dialect, cfg.Host, cfg.Port)
+	cfg.URI = fmt.Sprintf("%s://%s:%d", cfg.DatabaseDialect, cfg.Host, cfg.Port)
 	c, err := mongo.NewClient(options.Client().ApplyURI(cfg.URI))
 	if err != nil {
 		return nil, errors.Wrap(err, "couldn't create mongo client")
@@ -32,7 +32,7 @@ func NewMongo(ctx context.Context, cfg config.MongoConfig) (*mongo.Database, err
 		return nil, errors.Wrap(err, "couldn't connect to mongo client")
 	}
 
-	return c.Database(cfg.Name), nil
+	return c.Database(cfg.DatabaseName), nil
 }
 
 func checkConnection(ctx context.Context, c *mongo.Client) error {

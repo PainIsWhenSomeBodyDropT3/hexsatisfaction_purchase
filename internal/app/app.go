@@ -21,12 +21,12 @@ import (
 )
 
 // Run runs hexsatisfaction_purchase service
-func Run(configPath string) {
+func Run() {
 	ctx := context.Background()
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)
 
-	cfg, err := config.Init(configPath)
+	cfg, err := config.Init()
 	if err != nil {
 		log.Fatal("Init config error: ", err)
 	}
