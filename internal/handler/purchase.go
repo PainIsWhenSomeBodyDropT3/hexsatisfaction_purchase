@@ -109,8 +109,8 @@ func (req *createPurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -420,8 +420,8 @@ func (req *userIDPeriodPurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -501,8 +501,8 @@ func (req *userIDAfterDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -580,8 +580,8 @@ func (req *userIDBeforeDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -783,8 +783,8 @@ func (req *periodPurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -850,8 +850,8 @@ func (req *afterDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -915,8 +915,8 @@ func (req *beforeDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
