@@ -15,11 +15,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const configPath = "config/main"
-
 func Connect2CommentMongo() (context.Context, *CommentRepo, error) {
 	ctx := context.Background()
-	cfg, err := config.Init(configPath)
+	cfg, err := config.Init()
 	if err != nil {
 		return nil, nil, err
 	}

@@ -17,7 +17,7 @@ import (
 
 func Connect2FileMongo() (context.Context, *FileRepo, error) {
 	ctx := context.Background()
-	cfg, err := config.Init(configPath)
+	cfg, err := config.Init()
 	if err != nil {
 		return nil, nil, err
 	}
