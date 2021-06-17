@@ -17,7 +17,7 @@ type CommentsDTO []CommentDTO
 // Comment represents a comment model.
 type Comment mongo.Comment
 
-// Comment represents dto of a comment model.
+// CommentDTO represents dto of a comment model.
 type CommentDTO struct {
 	ID         string    `json:"id,omitempty"`
 	UserID     int       `json:"userID"`

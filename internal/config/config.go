@@ -16,6 +16,7 @@ type (
 		Mongo MongoConfig
 		Auth  JWTConfig
 		HTTP  HTTPConfig
+		GRPC  GRPCConfig
 	}
 	// PgConfig represents a structure with configs for mongo database.
 	MongoConfig struct {
@@ -35,6 +36,11 @@ type (
 		MaxHeaderBytes int
 		ReadTimeout    time.Duration
 		WriteTimeout   time.Duration
+	}
+	// GRPCConfig represents a structure with configs for grpc.
+	GRPCConfig struct {
+		Host string
+		Port string
 	}
 )
 
@@ -138,6 +144,14 @@ func unmarshal(cfg *Config) error {
 
 	if err := viper.UnmarshalKey("mongo.databaseDialect", &cfg.Mongo.Dialect); err != nil {
 		return errors.Wrap(err, "couldn't get databaseDialect")
+	}
+
+	if err := viper.UnmarshalKey("grpc.host", &cfg.GRPC.Host); err != nil {
+		return errors.Wrap(err, "couldn't unmarshal GRPC.Host")
+	}
+
+	if err := viper.UnmarshalKey("grpc.port", &cfg.GRPC.Port); err != nil {
+		return errors.Wrap(err, "couldn't unmarshal GRPC.Port")
 	}
 
 	return nil

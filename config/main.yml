@@ -1,10 +1,12 @@
 http:
-  port: 8000
+  port: 8001
   maxHeaderBytes: 1
   readTimeout: 10s
   writeTimeout: 10s
 
-
+grpc:
+  host: localhost
+  port: 8080
 
 mongo:
   databaseName: mongo
