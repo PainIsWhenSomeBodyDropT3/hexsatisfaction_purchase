@@ -93,8 +93,8 @@ func (req *createFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -164,8 +164,8 @@ func (req *updateFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -569,8 +569,8 @@ func (req *addedPeriodFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -635,8 +635,8 @@ func (req *updatedPeriodFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}

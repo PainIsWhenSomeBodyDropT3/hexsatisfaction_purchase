@@ -3,9 +3,9 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"testing"
 	"time"
 
@@ -49,7 +49,7 @@ func TestFile_Create(t *testing.T) {
 	tt := []test{
 		{
 			name:   "invalid author id",
-			path:   slash + file + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, api),
 			method: http.MethodPost,
 			req: model.CreateFileRequest{
 				Name:        "some",
@@ -69,7 +69,7 @@ func TestFile_Create(t *testing.T) {
 		},
 		{
 			name:   "create err",
-			path:   slash + file + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, api),
 			method: http.MethodPost,
 			req: model.CreateFileRequest{
 				Name:        "some",
@@ -89,7 +89,7 @@ func TestFile_Create(t *testing.T) {
 		},
 		{
 			name:   "all ok",
-			path:   slash + file + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, api),
 			method: http.MethodPost,
 			req: model.CreateFileRequest{
 				Name:        "some",
@@ -161,7 +161,7 @@ func TestFile_Update(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid author id",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateFileRequest{
@@ -184,7 +184,7 @@ func TestFile_Update(t *testing.T) {
 		},
 		{
 			name:    "update err",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateFileRequest{
@@ -206,7 +206,7 @@ func TestFile_Update(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, api),
 			method: http.MethodPut,
 			req: model.UpdateFileRequest{
 				ID:          id,
@@ -227,7 +227,7 @@ func TestFile_Update(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateFileRequest{
@@ -263,7 +263,7 @@ func TestFile_Update(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -302,7 +302,7 @@ func TestFile_Delete(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid author id",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteFileRequest{
@@ -317,7 +317,7 @@ func TestFile_Delete(t *testing.T) {
 		},
 		{
 			name:    "delete err",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteFileRequest{
@@ -331,7 +331,7 @@ func TestFile_Delete(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, api),
 			method: http.MethodDelete,
 			req: model.DeleteFileRequest{
 				ID: id,
@@ -344,7 +344,7 @@ func TestFile_Delete(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteFileRequest{
@@ -368,7 +368,7 @@ func TestFile_Delete(t *testing.T) {
 				tc.fn(file, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -409,7 +409,7 @@ func TestFile_FindByID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid author id",
-			path:        slash + file + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", file, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDFileRequest{
@@ -424,7 +424,7 @@ func TestFile_FindByID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + file + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", file, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDFileRequest{
@@ -438,7 +438,7 @@ func TestFile_FindByID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, api),
 			method: http.MethodGet,
 			req: model.IDFileRequest{
 				ID: id,
@@ -451,7 +451,7 @@ func TestFile_FindByID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, api),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.IDFileRequest{
@@ -486,7 +486,7 @@ func TestFile_FindByID(t *testing.T) {
 				tc.fn(file, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -535,7 +535,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid author id",
-			path:        slash + file + slash + api + slash + author + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", file, api, author),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req:         model.AuthorIDFileRequest{},
@@ -548,7 +548,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + file + slash + api + slash + author + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", file, api, author),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.AuthorIDFileRequest{
@@ -562,7 +562,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + api + slash + author + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/", file, api, author),
 			method: http.MethodGet,
 			req: model.AuthorIDFileRequest{
 				ID: 1,
@@ -575,7 +575,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + api + slash + author + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/", file, api, author),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.AuthorIDFileRequest{
@@ -612,7 +612,7 @@ func TestFile_FindByAuthorID(t *testing.T) {
 				tc.fn(file, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+strconv.Itoa(tc.req.ID), nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -659,7 +659,7 @@ func TestFile_FindByName(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + file + slash,
+			path:        fmt.Sprintf("/%s/", file),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.NameFileRequest{
@@ -673,7 +673,7 @@ func TestFile_FindByName(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash,
+			path:   fmt.Sprintf("/%s/", file),
 			method: http.MethodGet,
 			req: model.NameFileRequest{
 				Name: "some",
@@ -686,7 +686,7 @@ func TestFile_FindByName(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash,
+			path:    fmt.Sprintf("/%s/", file),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.NameFileRequest{
@@ -723,7 +723,7 @@ func TestFile_FindByName(t *testing.T) {
 				tc.fn(file, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.Name, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.Name), nil)
 			assert.Nil(err)
 
 			res := httptest.NewRecorder()
@@ -767,7 +767,7 @@ func TestFile_FindActual(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + file + slash + actual + slash,
+			path:        fmt.Sprintf("/%s/%s/", file, actual),
 			method:      http.MethodGet,
 			isOkMessage: true,
 
@@ -779,7 +779,7 @@ func TestFile_FindActual(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + actual + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, actual),
 			method: http.MethodGet,
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindActual", mock.Anything).
@@ -789,7 +789,7 @@ func TestFile_FindActual(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + actual + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, actual),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(fileService *m.File, data test) {
@@ -867,7 +867,7 @@ func TestFile_FindNotActual(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + file + slash + expired + slash,
+			path:        fmt.Sprintf("/%s/%s/", file, expired),
 			method:      http.MethodGet,
 			isOkMessage: true,
 
@@ -879,7 +879,7 @@ func TestFile_FindNotActual(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + expired + slash,
+			path:   fmt.Sprintf("/%s/%s/", file, expired),
 			method: http.MethodGet,
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindNotActual", mock.Anything).
@@ -889,7 +889,7 @@ func TestFile_FindNotActual(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + expired + slash,
+			path:    fmt.Sprintf("/%s/%s/", file, expired),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(fileService *m.File, data test) {
@@ -967,7 +967,7 @@ func TestFile_FindAll(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + file + slash,
+			path:        fmt.Sprintf("/%s/", file),
 			method:      http.MethodGet,
 			isOkMessage: true,
 
@@ -979,7 +979,7 @@ func TestFile_FindAll(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash,
+			path:   fmt.Sprintf("/%s/", file),
 			method: http.MethodGet,
 			fn: func(fileService *m.File, data test) {
 				fileService.On("FindAll", mock.Anything).
@@ -989,7 +989,7 @@ func TestFile_FindAll(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash,
+			path:    fmt.Sprintf("/%s/", file),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(fileService *m.File, data test) {
@@ -1068,7 +1068,7 @@ func TestFile_FindAddedByPeriod(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid date",
-			path:        slash + file + slash + added,
+			path:        fmt.Sprintf("/%s/%s", file, added),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.AddedPeriodFileRequest{
@@ -1084,7 +1084,7 @@ func TestFile_FindAddedByPeriod(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + file + slash + added,
+			path:        fmt.Sprintf("/%s/%s", file, added),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.AddedPeriodFileRequest{
@@ -1099,7 +1099,7 @@ func TestFile_FindAddedByPeriod(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + added,
+			path:   fmt.Sprintf("/%s/%s", file, added),
 			method: http.MethodPost,
 			req: model.AddedPeriodFileRequest{
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -1113,7 +1113,7 @@ func TestFile_FindAddedByPeriod(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + added,
+			path:    fmt.Sprintf("/%s/%s", file, added),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.AddedPeriodFileRequest{
@@ -1200,7 +1200,7 @@ func TestFile_FindUpdatedByPeriod(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid date",
-			path:        slash + file + slash + updated,
+			path:        fmt.Sprintf("/%s/%s", file, updated),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UpdatedPeriodFileRequest{
@@ -1216,7 +1216,7 @@ func TestFile_FindUpdatedByPeriod(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + file + slash + updated,
+			path:        fmt.Sprintf("/%s/%s", file, updated),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UpdatedPeriodFileRequest{
@@ -1231,7 +1231,7 @@ func TestFile_FindUpdatedByPeriod(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + file + slash + updated,
+			path:   fmt.Sprintf("/%s/%s", file, updated),
 			method: http.MethodPost,
 			req: model.UpdatedPeriodFileRequest{
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -1245,7 +1245,7 @@ func TestFile_FindUpdatedByPeriod(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + file + slash + updated,
+			path:    fmt.Sprintf("/%s/%s", file, updated),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UpdatedPeriodFileRequest{
