@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/JesusG2000/hexsatisfaction/pkg/grpc/api"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/repository"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/auth"
@@ -67,13 +68,14 @@ type Services struct {
 type Deps struct {
 	Repos        *repository.Repositories
 	TokenManager auth.TokenManager
+	GRPCClient   api.ExistanceClient
 }
 
 // NewServices is a Services constructor.
 func NewServices(deps Deps) *Services {
 	return &Services{
-		Purchase: NewPurchaseService(deps.Repos.Purchase),
-		Comment:  NewCommentService(deps.Repos.Comment),
-		File:     NewFileService(deps.Repos.File),
+		Purchase: NewPurchaseService(deps.Repos.Purchase, deps.GRPCClient),
+		Comment:  NewCommentService(deps.Repos.Comment, deps.GRPCClient),
+		File:     NewFileService(deps.Repos.File, deps.GRPCClient),
 	}
 }

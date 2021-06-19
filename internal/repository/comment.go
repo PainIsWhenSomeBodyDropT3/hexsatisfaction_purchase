@@ -139,14 +139,9 @@ func (c CommentRepo) FindByID(context context.Context, id string) (*model.Commen
 }
 
 // FindAllByUserID finds purchases by user userID.
-func (c CommentRepo) FindAllByUserID(context context.Context, id string) ([]model.CommentDTO, error) {
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (c CommentRepo) FindAllByUserID(context context.Context, id int) ([]model.CommentDTO, error) {
 	query := bson.M{
-		"userID": objID,
+		"userID": id,
 	}
 	var comments model.Comments
 	cursor, err := c.collection.Find(context, query)
@@ -187,19 +182,14 @@ func (c CommentRepo) FindByPurchaseID(context context.Context, id string) ([]mod
 }
 
 // FindByUserIDAndPurchaseID finds purchases by purchase and user userID.
-func (c CommentRepo) FindByUserIDAndPurchaseID(context context.Context, userID, purchaseID string) ([]model.CommentDTO, error) {
-	objUserID, err := primitive.ObjectIDFromHex(userID)
-	if err != nil {
-		return nil, err
-	}
-
+func (c CommentRepo) FindByUserIDAndPurchaseID(context context.Context, userID int, purchaseID string) ([]model.CommentDTO, error) {
 	objPurchaseID, err := primitive.ObjectIDFromHex(purchaseID)
 	if err != nil {
 		return nil, err
 	}
 
 	query := bson.M{
-		"userID":     objUserID,
+		"userID":     userID,
 		"purchaseID": objPurchaseID,
 	}
 	var comments model.Comments

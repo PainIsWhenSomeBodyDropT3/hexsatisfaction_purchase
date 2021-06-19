@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
@@ -13,6 +14,8 @@ import (
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/auth"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/middleware"
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type fileRouter struct {
@@ -90,8 +93,8 @@ func (req *createFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -115,7 +118,7 @@ func (req *createFileRequest) Validate() error {
 		return fmt.Errorf("add date is required")
 	case req.UpdateDate == time.Time{}:
 		return fmt.Errorf("update date is required")
-	case req.AuthorID == "":
+	case req.AuthorID == 0:
 		return fmt.Errorf("not correct author id")
 	default:
 		return nil
@@ -161,8 +164,8 @@ func (req *updateFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -181,7 +184,7 @@ func (req *updateFileRequest) Build(r *http.Request) error {
 // Validate validates request for update file.
 func (req *updateFileRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	case req.Name == "":
 		return fmt.Errorf("name is required")
@@ -195,7 +198,7 @@ func (req *updateFileRequest) Validate() error {
 		return fmt.Errorf("add date is required")
 	case req.UpdateDate == time.Time{}:
 		return fmt.Errorf("update date is required")
-	case req.AuthorID == "":
+	case req.AuthorID == 0:
 		return fmt.Errorf("not correct author id")
 	default:
 		return nil
@@ -256,7 +259,7 @@ func (req *deleteFileRequest) Build(r *http.Request) error {
 // Validate validates request for delete file.
 func (req *deleteFileRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -316,7 +319,7 @@ func (req *idFileRequest) Build(r *http.Request) error {
 // Validate validates request to find file by id.
 func (req *idFileRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -452,7 +455,11 @@ func (req *authorIDFileRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -460,7 +467,7 @@ func (req *authorIDFileRequest) Build(r *http.Request) error {
 // Validate validates request fto find file by author id.
 func (req *authorIDFileRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -562,8 +569,8 @@ func (req *addedPeriodFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -628,8 +635,8 @@ func (req *updatedPeriodFileRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
