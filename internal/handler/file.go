@@ -122,6 +122,17 @@ func (req *createFileRequest) Validate() error {
 	}
 }
 
+// @Summary Create
+// @Security ApiKeyAuth
+// @Tags file
+// @Description Create file
+// @Accept  json
+// @Produce  json
+// @Param file body model.CreateFileRequest true "File"
+// @Success 200 {string} string id
+// @Failure 400 {object} middleware.SwagError
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/api/ [post]
 func (f *fileRouter) createFile(w http.ResponseWriter, r *http.Request) {
 	var req createFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -191,6 +202,19 @@ func (req *updateFileRequest) Validate() error {
 	}
 }
 
+// @Summary Update
+// @Security ApiKeyAuth
+// @Tags file
+// @Description Update file
+// @Accept  json
+// @Produce  json
+// @Param id path string true "File id"
+// @Param file body model.UpdateFileRequest true "File"
+// @Success 200 {string} string id
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No file"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/api/{id} [put]
 func (f *fileRouter) updateFile(w http.ResponseWriter, r *http.Request) {
 	var req updateFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -239,6 +263,18 @@ func (req *deleteFileRequest) Validate() error {
 	}
 }
 
+// @Summary Delete
+// @Security ApiKeyAuth
+// @Tags file
+// @Description Delete file
+// @Accept  json
+// @Produce  json
+// @Param id path string true "File id"
+// @Success 200 {string} string id
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No file"
+// @Failure 500 {object} middleware.SwagError
+// @Router /author/api/{id} [delete]
 func (f *fileRouter) deleteFile(w http.ResponseWriter, r *http.Request) {
 	var req deleteFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -287,6 +323,18 @@ func (req *idFileRequest) Validate() error {
 	}
 }
 
+// @Summary FindByID
+// @Security ApiKeyAuth
+// @Tags file
+// @Description Find file by id
+// @Accept  json
+// @Produce  json
+// @Param id path string true "File id"
+// @Success 200 {object} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No file"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/api/{id} [get]
 func (f *fileRouter) findByIDFile(w http.ResponseWriter, r *http.Request) {
 	var req idFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -335,6 +383,17 @@ func (req *nameFileRequest) Validate() error {
 	}
 }
 
+// @Summary FindByName
+// @Tags file
+// @Description Find files by name
+// @Accept  json
+// @Produce  json
+// @Param name path string true "File name"
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/{name} [get]
 func (f *fileRouter) findByNameFile(w http.ResponseWriter, r *http.Request) {
 	var req nameFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -357,6 +416,16 @@ func (f *fileRouter) findByNameFile(w http.ResponseWriter, r *http.Request) {
 	middleware.JSONReturn(w, http.StatusOK, files)
 }
 
+// @Summary FindAll
+// @Tags file
+// @Description Find files
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/ [get]
 func (f *fileRouter) findAllFile(w http.ResponseWriter, r *http.Request) {
 	files, err := f.services.File.FindAll(r.Context())
 	if err != nil {
@@ -398,6 +467,18 @@ func (req *authorIDFileRequest) Validate() error {
 	}
 }
 
+// @Summary FindByAuthorID
+// @Security ApiKeyAuth
+// @Tags file
+// @Description Find files by author id
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Author id"
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/api/author/{id} [get]
 func (f *fileRouter) findByAuthorIDFile(w http.ResponseWriter, r *http.Request) {
 	var req authorIDFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -420,6 +501,16 @@ func (f *fileRouter) findByAuthorIDFile(w http.ResponseWriter, r *http.Request) 
 	middleware.JSONReturn(w, http.StatusOK, files)
 }
 
+// @Summary FindNotActual
+// @Tags file
+// @Description Find expired files
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/expired/ [get]
 func (f *fileRouter) findNotActualFile(w http.ResponseWriter, r *http.Request) {
 	files, err := f.services.File.FindNotActual(r.Context())
 	if err != nil {
@@ -435,6 +526,16 @@ func (f *fileRouter) findNotActualFile(w http.ResponseWriter, r *http.Request) {
 	middleware.JSONReturn(w, http.StatusOK, files)
 }
 
+// @Summary FindActual
+// @Tags file
+// @Description Find actual files
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/actual/ [get]
 func (f *fileRouter) findActualFile(w http.ResponseWriter, r *http.Request) {
 	files, err := f.services.File.FindActual(r.Context())
 	if err != nil {
@@ -483,6 +584,17 @@ func (req *addedPeriodFileRequest) Validate() error {
 	}
 }
 
+// @Summary FindAddedByPeriod
+// @Tags file
+// @Description Find added files by date period
+// @Accept  json
+// @Produce  json
+// @Param period body model.AddedPeriodFileRequest true "Period"
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/added [post]
 func (f *fileRouter) findAddedByPeriodFile(w http.ResponseWriter, r *http.Request) {
 	var req addedPeriodFileRequest
 	err := middleware.ParseRequest(r, &req)
@@ -538,6 +650,17 @@ func (req *updatedPeriodFileRequest) Validate() error {
 	}
 }
 
+// @Summary FindUpdatedByPeriod
+// @Tags file
+// @Description Find updated files by date period
+// @Accept  json
+// @Produce  json
+// @Param period body model.UpdatedPeriodFileRequest true "Period"
+// @Success 200 {array} model.File
+// @Failure 400 {object} middleware.SwagError
+// @Failure 404 {object} middleware.SwagEmptyError "No files"
+// @Failure 500 {object} middleware.SwagError
+// @Router /file/updated [post]
 func (f *fileRouter) findUpdatedByPeriodFile(w http.ResponseWriter, r *http.Request) {
 	var req updatedPeriodFileRequest
 	err := middleware.ParseRequest(r, &req)
