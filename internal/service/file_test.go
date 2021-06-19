@@ -10,11 +10,14 @@ import (
 	"github.com/pkg/errors"
 	testAssert "github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestFileService_Create(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.CreateFileRequest
@@ -33,7 +36,7 @@ func TestFileService_Create(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 			fn: func(file *m.File, data test) {
 				file.On("Create", mock.Anything, model.FileDTO{
@@ -60,7 +63,7 @@ func TestFileService_Create(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 			fn: func(file *m.File, data test) {
 				file.On("Create", mock.Anything, model.FileDTO{
@@ -82,7 +85,7 @@ func TestFileService_Create(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}
@@ -97,6 +100,8 @@ func TestFileService_Create(t *testing.T) {
 
 func TestFileService_Update(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.UpdateFileRequest
@@ -116,7 +121,7 @@ func TestFileService_Update(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 			fn: func(file *m.File, data *test) {
 				file.On("Update", mock.Anything, data.req.ID, model.FileDTO{
@@ -144,7 +149,7 @@ func TestFileService_Update(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 			fn: func(file *m.File, data *test) {
 				data.expID = data.req.ID
@@ -166,7 +171,7 @@ func TestFileService_Update(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, &tc)
 			}
@@ -181,6 +186,8 @@ func TestFileService_Update(t *testing.T) {
 
 func TestFileService_Delete(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.DeleteFileRequest
@@ -217,7 +224,7 @@ func TestFileService_Delete(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, &tc)
 			}
@@ -232,6 +239,8 @@ func TestFileService_Delete(t *testing.T) {
 
 func TestFileService_FindByID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.IDFileRequest
@@ -269,7 +278,7 @@ func TestFileService_FindByID(t *testing.T) {
 				AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Actual:      true,
-				AuthorID:    primitive.NewObjectID().Hex(),
+				AuthorID:    1,
 			},
 		},
 	}
@@ -277,7 +286,7 @@ func TestFileService_FindByID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, &tc)
 			}
@@ -292,6 +301,8 @@ func TestFileService_FindByID(t *testing.T) {
 
 func TestFileService_FindByName(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.NameFileRequest
@@ -330,7 +341,7 @@ func TestFileService_FindByName(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 				},
 			},
 		},
@@ -339,7 +350,7 @@ func TestFileService_FindByName(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}
@@ -354,6 +365,8 @@ func TestFileService_FindByName(t *testing.T) {
 
 func TestFileService_FindAll(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		fn     func(file *m.File, data test)
@@ -387,7 +400,7 @@ func TestFileService_FindAll(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 				},
 			},
 		},
@@ -396,7 +409,7 @@ func TestFileService_FindAll(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}
@@ -411,6 +424,8 @@ func TestFileService_FindAll(t *testing.T) {
 
 func TestFileService_FindByAuthorID(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.AuthorIDFileRequest
@@ -422,7 +437,7 @@ func TestFileService_FindByAuthorID(t *testing.T) {
 		{
 			name: "Find errors",
 			req: model.AuthorIDFileRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(file *m.File, data *test) {
 				file.On("FindByAuthorID", mock.Anything, data.req.ID).
@@ -433,7 +448,7 @@ func TestFileService_FindByAuthorID(t *testing.T) {
 		{
 			name: "All ok",
 			req: model.AuthorIDFileRequest{
-				ID: primitive.NewObjectID().Hex(),
+				ID: 1,
 			},
 			fn: func(file *m.File, data *test) {
 				for i := range data.exp {
@@ -460,7 +475,7 @@ func TestFileService_FindByAuthorID(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, &tc)
 			}
@@ -475,6 +490,8 @@ func TestFileService_FindByAuthorID(t *testing.T) {
 
 func TestFileService_FindNotActual(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		fn     func(file *m.File, data test)
@@ -508,7 +525,7 @@ func TestFileService_FindNotActual(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      false,
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 				},
 			},
 		},
@@ -517,7 +534,7 @@ func TestFileService_FindNotActual(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}
@@ -532,6 +549,8 @@ func TestFileService_FindNotActual(t *testing.T) {
 
 func TestFileService_FindActual(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		fn     func(file *m.File, data test)
@@ -565,7 +584,7 @@ func TestFileService_FindActual(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 				},
 			},
 		},
@@ -574,7 +593,7 @@ func TestFileService_FindActual(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}
@@ -589,6 +608,8 @@ func TestFileService_FindActual(t *testing.T) {
 
 func TestFileService_FindAddedByPeriod(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.AddedPeriodFileRequest
@@ -629,7 +650,7 @@ func TestFileService_FindAddedByPeriod(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 				},
 			},
 		},
@@ -638,7 +659,7 @@ func TestFileService_FindAddedByPeriod(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}
@@ -653,6 +674,8 @@ func TestFileService_FindAddedByPeriod(t *testing.T) {
 
 func TestFileService_FindUpdatedByPeriod(t *testing.T) {
 	assert := testAssert.New(t)
+	testApi, err := InitTest4Mock()
+	require.NoError(t, err)
 	type test struct {
 		name   string
 		req    model.UpdatedPeriodFileRequest
@@ -693,7 +716,7 @@ func TestFileService_FindUpdatedByPeriod(t *testing.T) {
 					AddDate:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					UpdateDate:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Actual:      true,
-					AuthorID:    primitive.NewObjectID().Hex(),
+					AuthorID:    1,
 				},
 			},
 		},
@@ -702,7 +725,7 @@ func TestFileService_FindUpdatedByPeriod(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			file := new(m.File)
 			ctx := context.Background()
-			service := NewFileService(file)
+			service := NewFileService(file, testApi.GRPCClient)
 			if tc.fn != nil {
 				tc.fn(file, tc)
 			}

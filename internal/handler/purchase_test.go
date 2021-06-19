@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -45,10 +46,9 @@ func TestPurchase_Create(t *testing.T) {
 	tt := []test{
 		{
 			name:   "invalid user id",
-			path:   slash + purchase + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", purchase, api),
 			method: http.MethodPost,
 			req: model.CreatePurchaseRequest{
-				UserID: "some",
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -61,10 +61,10 @@ func TestPurchase_Create(t *testing.T) {
 		},
 		{
 			name:   "create err",
-			path:   slash + purchase + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", purchase, api),
 			method: http.MethodPost,
 			req: model.CreatePurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -76,10 +76,10 @@ func TestPurchase_Create(t *testing.T) {
 		},
 		{
 			name:   "all ok",
-			path:   slash + purchase + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", purchase, api),
 			method: http.MethodPost,
 			req: model.CreatePurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -143,7 +143,7 @@ func TestPurchase_Delete(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid  id",
-			path:    slash + purchase + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", purchase, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeletePurchaseRequest{
@@ -158,7 +158,7 @@ func TestPurchase_Delete(t *testing.T) {
 		},
 		{
 			name:    "delete err",
-			path:    slash + purchase + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", purchase, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeletePurchaseRequest{
@@ -172,7 +172,7 @@ func TestPurchase_Delete(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", purchase, api),
 			method: http.MethodDelete,
 			req: model.DeletePurchaseRequest{
 				ID: id,
@@ -185,7 +185,7 @@ func TestPurchase_Delete(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", purchase, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeletePurchaseRequest{
@@ -209,7 +209,7 @@ func TestPurchase_Delete(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -251,7 +251,7 @@ func TestPurchase_FindById(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", purchase, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDPurchaseRequest{
@@ -266,7 +266,7 @@ func TestPurchase_FindById(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", purchase, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDPurchaseRequest{
@@ -280,7 +280,7 @@ func TestPurchase_FindById(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", purchase, api),
 			method: http.MethodGet,
 			req: model.IDPurchaseRequest{
 				ID: id,
@@ -293,7 +293,7 @@ func TestPurchase_FindById(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", purchase, api),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.IDPurchaseRequest{
@@ -306,7 +306,7 @@ func TestPurchase_FindById(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.PurchaseDTO{
 				ID:     id,
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -323,7 +323,7 @@ func TestPurchase_FindById(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -372,12 +372,10 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + last + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, last, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: "some",
-			},
+			req:         model.UserIDPurchaseRequest{},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
 					Return(&data.expRes, nil)
@@ -387,12 +385,10 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + last + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, last, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: id,
-			},
+			req:         model.UserIDPurchaseRequest{ID: 1},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
 					Return(&data.expRes, errors.New(""))
@@ -401,10 +397,10 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + last + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, last, user),
 			method: http.MethodGet,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
@@ -414,11 +410,11 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + last + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, last, user),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindLastByUserID", mock.Anything, data.req).
@@ -427,7 +423,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.PurchaseDTO{
 				ID:     id,
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -444,7 +440,7 @@ func TestPurchase_FindLastByUserId(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -493,12 +489,10 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: "some",
-			},
+			req:         model.UserIDPurchaseRequest{},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -508,12 +502,10 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDPurchaseRequest{
-				ID: id,
-			},
+			req:         model.UserIDPurchaseRequest{ID: 1},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, errors.New(""))
@@ -522,10 +514,10 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method: http.MethodGet,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
@@ -535,11 +527,11 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDPurchaseRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAllByUserID", mock.Anything, data.req).
@@ -549,13 +541,13 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -573,7 +565,7 @@ func TestPurchase_FindAllByUserId(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -622,11 +614,10 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + period + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, period, user),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    "some",
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -639,11 +630,11 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + period + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, period, user),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -655,10 +646,10 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + period + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, period, user),
 			method: http.MethodPost,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -670,11 +661,11 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + period + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, period, user),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UserIDPeriodPurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				End:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
@@ -686,13 +677,13 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -714,7 +705,7 @@ func TestPurchase_FindByUserIdAndPeriod(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -763,11 +754,10 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + after + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, after, user),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    "some",
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -779,11 +769,11 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + after + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, after, user),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -794,10 +784,10 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + after + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, after, user),
 			method: http.MethodPost,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -808,11 +798,11 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + after + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, after, user),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UserIDAfterDatePurchaseRequest{
-				ID:    id,
+				ID:    1,
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -823,13 +813,13 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -851,7 +841,7 @@ func TestPurchase_FindByUserIdAfterDate(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -900,11 +890,10 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + before + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, before, user),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  "some",
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -916,11 +905,11 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + before + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, before, user),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  id,
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -931,10 +920,10 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + before + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, before, user),
 			method: http.MethodPost,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  id,
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -945,11 +934,11 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + before + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/%s/", purchase, api, before, user),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.UserIDBeforeDatePurchaseRequest{
-				ID:  id,
+				ID:  1,
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -960,13 +949,13 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -988,7 +977,7 @@ func TestPurchase_FindByUserIdBeforeDate(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -1037,11 +1026,10 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: "some",
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1053,11 +1041,11 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1068,10 +1056,10 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method: http.MethodGet,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1082,11 +1070,11 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/", purchase, api, user),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDFileIDPurchaseRequest{
-				UserID: id,
+				UserID: 1,
 				FileID: id,
 			},
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1097,13 +1085,13 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1121,8 +1109,7 @@ func TestPurchase_FindByUserIdAndFileID(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			fullPath := tc.path + tc.req.UserID + slash + file + slash + tc.req.FileID
-			req, err := http.NewRequest(tc.method, fullPath, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d/%s/%s", tc.path, tc.req.UserID, file, tc.req.FileID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -1170,7 +1157,7 @@ func TestPurchase_FindLast(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + last + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, last),
 			method:      http.MethodGet,
 			isOkMessage: true,
 
@@ -1182,7 +1169,7 @@ func TestPurchase_FindLast(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + last + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/", purchase, api, last),
 			method: http.MethodGet,
 
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1193,7 +1180,7 @@ func TestPurchase_FindLast(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + last + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/", purchase, api, last),
 			method:  http.MethodGet,
 			isOkRes: true,
 
@@ -1204,7 +1191,7 @@ func TestPurchase_FindLast(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.PurchaseDTO{
 				ID:     id,
-				UserID: id,
+				UserID: 1,
 				Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				FileID: id,
 			},
@@ -1269,7 +1256,7 @@ func TestPurchase_FindAll(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", purchase, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1280,7 +1267,7 @@ func TestPurchase_FindAll(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", purchase, api),
 			method: http.MethodGet,
 			fn: func(purchaseService *m.Purchase, data test) {
 				purchaseService.On("FindAll", mock.Anything).
@@ -1290,7 +1277,7 @@ func TestPurchase_FindAll(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", purchase, api),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(purchaseService *m.Purchase, data test) {
@@ -1301,13 +1288,13 @@ func TestPurchase_FindAll(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1374,7 +1361,7 @@ func TestPurchase_FindByPeriod(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  start date",
-			path:        slash + purchase + slash + api + slash + period,
+			path:        fmt.Sprintf("/%s/%s/%s", purchase, api, period),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.PeriodPurchaseRequest{
@@ -1390,7 +1377,7 @@ func TestPurchase_FindByPeriod(t *testing.T) {
 		},
 		{
 			name:   "find err",
-			path:   slash + purchase + slash + api + slash + period,
+			path:   fmt.Sprintf("/%s/%s/%s", purchase, api, period),
 			method: http.MethodPost,
 			req: model.PeriodPurchaseRequest{
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -1404,7 +1391,7 @@ func TestPurchase_FindByPeriod(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + period,
+			path:   fmt.Sprintf("/%s/%s/%s", purchase, api, period),
 			method: http.MethodPost,
 			req: model.PeriodPurchaseRequest{
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -1418,7 +1405,7 @@ func TestPurchase_FindByPeriod(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + period,
+			path:    fmt.Sprintf("/%s/%s/%s", purchase, api, period),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.PeriodPurchaseRequest{
@@ -1433,13 +1420,13 @@ func TestPurchase_FindByPeriod(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1510,7 +1497,7 @@ func TestPurchase_FindAfterDate(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid start date",
-			path:        slash + purchase + slash + api + slash + after,
+			path:        fmt.Sprintf("/%s/%s/%s", purchase, api, after),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.AfterDatePurchaseRequest{
@@ -1525,7 +1512,7 @@ func TestPurchase_FindAfterDate(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + after,
+			path:        fmt.Sprintf("/%s/%s/%s", purchase, api, after),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.AfterDatePurchaseRequest{
@@ -1539,7 +1526,7 @@ func TestPurchase_FindAfterDate(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + after,
+			path:   fmt.Sprintf("/%s/%s/%s", purchase, api, after),
 			method: http.MethodPost,
 			req: model.AfterDatePurchaseRequest{
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -1552,7 +1539,7 @@ func TestPurchase_FindAfterDate(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + after,
+			path:    fmt.Sprintf("/%s/%s/%s", purchase, api, after),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.AfterDatePurchaseRequest{
@@ -1566,13 +1553,13 @@ func TestPurchase_FindAfterDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1643,7 +1630,7 @@ func TestPurchase_FindBeforeDate(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  end date",
-			path:        slash + purchase + slash + api + slash + before,
+			path:        fmt.Sprintf("/%s/%s/%s", purchase, api, before),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.BeforeDatePurchaseRequest{
@@ -1658,7 +1645,7 @@ func TestPurchase_FindBeforeDate(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + before,
+			path:        fmt.Sprintf("/%s/%s/%s", purchase, api, before),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.BeforeDatePurchaseRequest{
@@ -1672,7 +1659,7 @@ func TestPurchase_FindBeforeDate(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + before,
+			path:   fmt.Sprintf("/%s/%s/%s", purchase, api, before),
 			method: http.MethodPost,
 			req: model.BeforeDatePurchaseRequest{
 				End: time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
@@ -1685,7 +1672,7 @@ func TestPurchase_FindBeforeDate(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + before,
+			path:    fmt.Sprintf("/%s/%s/%s", purchase, api, before),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.BeforeDatePurchaseRequest{
@@ -1699,13 +1686,13 @@ func TestPurchase_FindBeforeDate(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1776,7 +1763,7 @@ func TestPurchase_FindByFileID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid  id",
-			path:        slash + purchase + slash + api + slash + file + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, file),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.FileIDPurchaseRequest{
@@ -1791,7 +1778,7 @@ func TestPurchase_FindByFileID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + purchase + slash + api + slash + file + slash,
+			path:        fmt.Sprintf("/%s/%s/%s/", purchase, api, file),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.FileIDPurchaseRequest{
@@ -1805,7 +1792,7 @@ func TestPurchase_FindByFileID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + purchase + slash + api + slash + file + slash,
+			path:   fmt.Sprintf("/%s/%s/%s/", purchase, api, file),
 			method: http.MethodGet,
 			req: model.FileIDPurchaseRequest{
 				FileID: id,
@@ -1818,7 +1805,7 @@ func TestPurchase_FindByFileID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + purchase + slash + api + slash + file + slash,
+			path:    fmt.Sprintf("/%s/%s/%s/", purchase, api, file),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.FileIDPurchaseRequest{
@@ -1832,13 +1819,13 @@ func TestPurchase_FindByFileID(t *testing.T) {
 			expRes: []model.PurchaseDTO{
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
 				{
 					ID:     id,
-					UserID: id,
+					UserID: 1,
 					Date:   time.Date(2009, time.December, 10, 23, 0, 0, 0, time.Local),
 					FileID: id,
 				},
@@ -1856,7 +1843,7 @@ func TestPurchase_FindByFileID(t *testing.T) {
 				tc.fn(purchaseService, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.FileID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.FileID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)

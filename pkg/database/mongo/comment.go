@@ -9,7 +9,7 @@ import (
 // Comment represents a comment model.
 type Comment struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty"`
-	UserID     primitive.ObjectID `bson:"userID"`
+	UserID     int                `bson:"userID"`
 	PurchaseID primitive.ObjectID `bson:"purchaseID"`
 	Date       time.Time          `bson:"date"`
 	Text       string             `bson:"text"`

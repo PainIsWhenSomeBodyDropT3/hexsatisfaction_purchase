@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -50,7 +51,7 @@ func TestComment_Create(t *testing.T) {
 	tt := []test{
 		{
 			name:   "invalid user id",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodPost,
 			req: model.CreateCommentRequest{
 				Date: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -65,10 +66,10 @@ func TestComment_Create(t *testing.T) {
 		},
 		{
 			name:   "create err",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodPost,
 			req: model.CreateCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -81,10 +82,10 @@ func TestComment_Create(t *testing.T) {
 		},
 		{
 			name:   "all ok",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodPost,
 			req: model.CreateCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -149,7 +150,7 @@ func TestComment_Update(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid id",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateCommentRequest{
@@ -166,12 +167,12 @@ func TestComment_Update(t *testing.T) {
 		},
 		{
 			name:    "update err",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateCommentRequest{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -184,11 +185,11 @@ func TestComment_Update(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodPut,
 			req: model.UpdateCommentRequest{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -201,12 +202,12 @@ func TestComment_Update(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodPut,
 			isOkRes: true,
 			req: model.UpdateCommentRequest{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -233,7 +234,7 @@ func TestComment_Update(t *testing.T) {
 			err := json.NewEncoder(body).Encode(&tc.req)
 			assert.Nil(err)
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, body)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), body)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -273,7 +274,7 @@ func TestComment_Delete(t *testing.T) {
 	tt := []test{
 		{
 			name:    "invalid id",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req:     model.DeleteCommentRequest{ID: "some"},
@@ -286,7 +287,7 @@ func TestComment_Delete(t *testing.T) {
 		},
 		{
 			name:    "delete err",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteCommentRequest{
@@ -300,7 +301,7 @@ func TestComment_Delete(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodDelete,
 			req: model.DeleteCommentRequest{
 				ID: id,
@@ -313,7 +314,7 @@ func TestComment_Delete(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodDelete,
 			isOkRes: true,
 			req: model.DeleteCommentRequest{
@@ -337,7 +338,7 @@ func TestComment_Delete(t *testing.T) {
 				tc.fn(comment, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -379,7 +380,7 @@ func TestComment_FindByID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid id",
-			path:        slash + comment + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req:         model.IDCommentRequest{ID: "some"},
@@ -392,7 +393,7 @@ func TestComment_FindByID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + comment + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.IDCommentRequest{
@@ -406,7 +407,7 @@ func TestComment_FindByID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodGet,
 			req: model.IDCommentRequest{
 				ID: id,
@@ -419,7 +420,7 @@ func TestComment_FindByID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.IDCommentRequest{
@@ -432,7 +433,7 @@ func TestComment_FindByID(t *testing.T) {
 			expCode: http.StatusOK,
 			expRes: model.CommentDTO{
 				ID:         id,
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 				Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 				Text:       "some text",
@@ -450,7 +451,7 @@ func TestComment_FindByID(t *testing.T) {
 				tc.fn(comment, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			req.Header.Set(authorizationHeader, "Bearer "+token)
@@ -498,7 +499,7 @@ func TestComment_FindAll(t *testing.T) {
 	tt := []test{
 		{
 			name:        "find err",
-			path:        slash + comment + slash + api + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, api),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			fn: func(commentService *m.Comment, data test) {
@@ -509,7 +510,7 @@ func TestComment_FindAll(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + api + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, api),
 			method: http.MethodGet,
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAll", mock.Anything).
@@ -519,7 +520,7 @@ func TestComment_FindAll(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + api + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, api),
 			method:  http.MethodGet,
 			isOkRes: true,
 			fn: func(commentService *m.Comment, data test) {
@@ -530,7 +531,7 @@ func TestComment_FindAll(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -596,10 +597,10 @@ func TestComment_FindAllByUserID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid id",
-			path:        slash + comment + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req:         model.UserIDCommentRequest{ID: "some"},
+			req:         model.UserIDCommentRequest{},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -609,12 +610,10 @@ func TestComment_FindAllByUserID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + comment + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req: model.UserIDCommentRequest{
-				ID: id,
-			},
+			req:         model.UserIDCommentRequest{ID: 1},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
 					Return(data.expRes, errors.New(""))
@@ -623,10 +622,10 @@ func TestComment_FindAllByUserID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, user),
 			method: http.MethodGet,
 			req: model.UserIDCommentRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
@@ -636,11 +635,11 @@ func TestComment_FindAllByUserID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, user),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserIDCommentRequest{
-				ID: id,
+				ID: 1,
 			},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindAllByUserID", mock.Anything, data.req).
@@ -650,7 +649,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -669,7 +668,7 @@ func TestComment_FindAllByUserID(t *testing.T) {
 				tc.fn(comment, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			res := httptest.NewRecorder()
@@ -714,7 +713,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid id",
-			path:        slash + comment + slash + purchase + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, purchase),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req:         model.PurchaseIDCommentRequest{ID: "some"},
@@ -727,7 +726,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + comment + slash + purchase + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, purchase),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.PurchaseIDCommentRequest{
@@ -741,7 +740,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + purchase + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, purchase),
 			method: http.MethodGet,
 			req: model.PurchaseIDCommentRequest{
 				ID: id,
@@ -754,7 +753,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + purchase + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, purchase),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.PurchaseIDCommentRequest{
@@ -768,7 +767,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -787,7 +786,7 @@ func TestComment_FindByPurchaseID(t *testing.T) {
 				tc.fn(comment, tc)
 			}
 
-			req, err := http.NewRequest(tc.method, tc.path+tc.req.ID, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%s", tc.path, tc.req.ID), nil)
 			assert.Nil(err)
 
 			res := httptest.NewRecorder()
@@ -832,10 +831,10 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid id",
-			path:        slash + comment + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
-			req:         model.UserPurchaseIDCommentRequest{UserID: "some", PurchaseID: "some"},
+			req:         model.UserPurchaseIDCommentRequest{PurchaseID: "some"},
 			fn: func(commentService *m.Comment, data test) {
 				commentService.On("FindByUserIDAndPurchaseID", mock.Anything, data.req).
 					Return(data.expRes, nil)
@@ -845,11 +844,11 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + comment + slash + user + slash,
+			path:        fmt.Sprintf("/%s/%s/", comment, user),
 			method:      http.MethodGet,
 			isOkMessage: true,
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 			},
 			fn: func(commentService *m.Comment, data test) {
@@ -860,10 +859,10 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + user + slash,
+			path:   fmt.Sprintf("/%s/%s/", comment, user),
 			method: http.MethodGet,
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 			},
 			fn: func(commentService *m.Comment, data test) {
@@ -874,11 +873,11 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + user + slash,
+			path:    fmt.Sprintf("/%s/%s/", comment, user),
 			method:  http.MethodGet,
 			isOkRes: true,
 			req: model.UserPurchaseIDCommentRequest{
-				UserID:     id,
+				UserID:     1,
 				PurchaseID: id,
 			},
 			fn: func(commentService *m.Comment, data test) {
@@ -889,7 +888,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -907,8 +906,7 @@ func TestComment_FindByUserIDAndPurchaseID(t *testing.T) {
 			if tc.fn != nil {
 				tc.fn(comment, tc)
 			}
-			fullPath := tc.path + tc.req.UserID + slash + purchase + slash + tc.req.PurchaseID
-			req, err := http.NewRequest(tc.method, fullPath, nil)
+			req, err := http.NewRequest(tc.method, fmt.Sprintf("%s%d/%s/%s", tc.path, tc.req.UserID, purchase, tc.req.PurchaseID), nil)
 			assert.Nil(err)
 
 			res := httptest.NewRecorder()
@@ -953,7 +951,7 @@ func TestComment_FindByText(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid text",
-			path:        slash + comment + slash + text,
+			path:        fmt.Sprintf("/%s/%s", comment, text),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.TextCommentRequest{
@@ -968,7 +966,7 @@ func TestComment_FindByText(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + comment + slash + text,
+			path:        fmt.Sprintf("/%s/%s", comment, text),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.TextCommentRequest{
@@ -982,7 +980,7 @@ func TestComment_FindByText(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + text,
+			path:   fmt.Sprintf("/%s/%s", comment, text),
 			method: http.MethodPost,
 			req: model.TextCommentRequest{
 				Text: "some",
@@ -995,7 +993,7 @@ func TestComment_FindByText(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + text,
+			path:    fmt.Sprintf("/%s/%s", comment, text),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.TextCommentRequest{
@@ -1009,7 +1007,7 @@ func TestComment_FindByText(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",
@@ -1077,7 +1075,7 @@ func TestComment_FindByPeriod(t *testing.T) {
 	tt := []test{
 		{
 			name:        "invalid period",
-			path:        slash + comment + slash + period,
+			path:        fmt.Sprintf("/%s/%s", comment, period),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.PeriodCommentRequest{
@@ -1092,7 +1090,7 @@ func TestComment_FindByPeriod(t *testing.T) {
 		},
 		{
 			name:        "find err",
-			path:        slash + comment + slash + period,
+			path:        fmt.Sprintf("/%s/%s", comment, period),
 			method:      http.MethodPost,
 			isOkMessage: true,
 			req: model.PeriodCommentRequest{
@@ -1107,7 +1105,7 @@ func TestComment_FindByPeriod(t *testing.T) {
 		},
 		{
 			name:   "not found",
-			path:   slash + comment + slash + period,
+			path:   fmt.Sprintf("/%s/%s", comment, period),
 			method: http.MethodPost,
 			req: model.PeriodCommentRequest{
 				Start: time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
@@ -1121,7 +1119,7 @@ func TestComment_FindByPeriod(t *testing.T) {
 		},
 		{
 			name:    "all ok",
-			path:    slash + comment + slash + period,
+			path:    fmt.Sprintf("/%s/%s", comment, period),
 			method:  http.MethodPost,
 			isOkRes: true,
 			req: model.PeriodCommentRequest{
@@ -1136,7 +1134,7 @@ func TestComment_FindByPeriod(t *testing.T) {
 			expRes: []model.CommentDTO{
 				{
 					ID:         id,
-					UserID:     id,
+					UserID:     1,
 					PurchaseID: id,
 					Date:       time.Date(2009, time.November, 10, 23, 0, 0, 0, time.Local),
 					Text:       "some text",

@@ -20,7 +20,7 @@ type Purchase mongo.Purchase
 // PurchaseDTO represents dto of a purchase model.
 type PurchaseDTO struct {
 	ID     string    `json:"id,omitempty"`
-	UserID string    `json:"userID"`
+	UserID int       `json:"userID"`
 	Date   time.Time `json:"date"`
 	FileID string    `json:"fileID"`
 }
@@ -28,19 +28,14 @@ type PurchaseDTO struct {
 // Entity converts PurchaseDTO to Purchase.
 func (p PurchaseDTO) Entity() (*Purchase, error) {
 	purchase := Purchase{
-		Date: p.Date,
+		UserID: p.UserID,
+		Date:   p.Date,
 	}
 	var err error
 	if p.ID != "" {
 		purchase.ID, err = primitive.ObjectIDFromHex(p.ID)
 		if err != nil {
 			return nil, errors.Wrap(err, "invalid id")
-		}
-	}
-	if p.UserID != "" {
-		purchase.UserID, err = primitive.ObjectIDFromHex(p.UserID)
-		if err != nil {
-			return nil, errors.Wrap(err, "invalid user id")
 		}
 	}
 	if p.FileID != "" {
@@ -57,7 +52,7 @@ func (p PurchaseDTO) Entity() (*Purchase, error) {
 func (p Purchase) DTO() *PurchaseDTO {
 	purchase := PurchaseDTO{
 		ID:     p.ID.Hex(),
-		UserID: p.UserID.Hex(),
+		UserID: p.UserID,
 		Date:   p.Date,
 		FileID: p.FileID.Hex(),
 	}

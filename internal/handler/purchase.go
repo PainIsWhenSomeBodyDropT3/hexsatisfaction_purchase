@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
@@ -13,6 +14,7 @@ import (
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/auth"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/middleware"
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -107,8 +109,8 @@ func (req *createPurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -120,7 +122,7 @@ func (req *createPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request for create purchase.
 func (req *createPurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.UserID):
+	case req.UserID == 0:
 		return fmt.Errorf("not correct user id")
 	case req.Date == time.Time{}:
 		return fmt.Errorf("date is required")
@@ -290,7 +292,11 @@ func (req *lastUserIDPurchaseRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -298,7 +304,7 @@ func (req *lastUserIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find last purchase by user id.
 func (req *lastUserIDPurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.ID):
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -350,7 +356,11 @@ func (req *userIDPurchaseRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -358,7 +368,7 @@ func (req *userIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id.
 func (req *userIDPurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.ID):
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -410,8 +420,8 @@ func (req *userIDPeriodPurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -422,7 +432,11 @@ func (req *userIDPeriodPurchaseRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -430,7 +444,7 @@ func (req *userIDPeriodPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id and date period.
 func (req *userIDPeriodPurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.ID):
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	case req.Start == time.Time{}:
 		return fmt.Errorf("start date is required")
@@ -487,8 +501,8 @@ func (req *userIDAfterDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -499,7 +513,11 @@ func (req *userIDAfterDatePurchaseRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -507,7 +525,7 @@ func (req *userIDAfterDatePurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id after date.
 func (req *userIDAfterDatePurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.ID):
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	case req.Start == time.Time{}:
 		return fmt.Errorf("start date is required")
@@ -562,8 +580,8 @@ func (req *userIDBeforeDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -574,7 +592,11 @@ func (req *userIDBeforeDatePurchaseRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -582,7 +604,7 @@ func (req *userIDBeforeDatePurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id before date.
 func (req *userIDBeforeDatePurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.ID):
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	case req.End == time.Time{}:
 		return fmt.Errorf("end date is required")
@@ -643,7 +665,11 @@ func (req *userIDFileIDPurchaseRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no file id")
 	}
 
-	req.UserID = vUserID
+	userID, err := strconv.Atoi(vUserID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.UserID = userID
 	req.FileID = vFileID
 
 	return nil
@@ -652,7 +678,7 @@ func (req *userIDFileIDPurchaseRequest) Build(r *http.Request) error {
 // Validate validates request to find all purchases by user id and file name.
 func (req *userIDFileIDPurchaseRequest) Validate() error {
 	switch {
-	case !primitive.IsValidObjectID(req.UserID):
+	case req.UserID == 0:
 		return fmt.Errorf("not correct user id")
 	case !primitive.IsValidObjectID(req.FileID):
 		return fmt.Errorf("not correct file id")
@@ -757,8 +783,8 @@ func (req *periodPurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -824,8 +850,8 @@ func (req *afterDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -889,8 +915,8 @@ func (req *beforeDatePurchaseRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
