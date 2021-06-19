@@ -16,5 +16,5 @@ type File struct {
 	AddDate     time.Time          `bson:"addDate"`
 	UpdateDate  time.Time          `bson:"updateDate"`
 	Actual      bool               `bson:"actual"`
-	AuthorID    primitive.ObjectID `bson:"authorID"`
+	AuthorID    int                `bson:"authorID"`
 }

@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/JesusG2000/hexsatisfaction_purchase/internal/model"
@@ -13,6 +14,8 @@ import (
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/auth"
 	"github.com/JesusG2000/hexsatisfaction_purchase/pkg/middleware"
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type commentRouter struct {
@@ -86,8 +89,8 @@ func (req *createCommentRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -99,7 +102,7 @@ func (req *createCommentRequest) Build(r *http.Request) error {
 // Validate validates request for create comment.
 func (req *createCommentRequest) Validate() error {
 	switch {
-	case req.UserID == "":
+	case req.UserID == 0:
 		return fmt.Errorf("not correct user id")
 	case req.PurchaseID == "":
 		return fmt.Errorf("not correct purchase id")
@@ -151,8 +154,8 @@ func (req *updateCommentRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -171,11 +174,11 @@ func (req *updateCommentRequest) Build(r *http.Request) error {
 // Validate validates request for update comment.
 func (req *updateCommentRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
-	case req.UserID == "":
+	case req.UserID == 0:
 		return fmt.Errorf("not correct user id")
-	case req.PurchaseID == "":
+	case !primitive.IsValidObjectID(req.PurchaseID):
 		return fmt.Errorf("not correct purchase id")
 	case req.Date == time.Time{}:
 		return fmt.Errorf("date is required")
@@ -240,7 +243,7 @@ func (req *deleteCommentRequest) Build(r *http.Request) error {
 // Validate validates request for delete comment.
 func (req *deleteCommentRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -300,7 +303,7 @@ func (req *idCommentRequest) Build(r *http.Request) error {
 // Validate validates request to find comment by id.
 func (req *idCommentRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -352,7 +355,11 @@ func (req *userIDCommentRequest) Build(r *http.Request) error {
 		return fmt.Errorf("no id")
 	}
 
-	req.ID = vID
+	id, err := strconv.Atoi(vID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
+	}
+	req.ID = id
 
 	return nil
 }
@@ -360,7 +367,7 @@ func (req *userIDCommentRequest) Build(r *http.Request) error {
 // Validate validates request to find comment by user id.
 func (req *userIDCommentRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case req.ID == 0:
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -419,7 +426,7 @@ func (req *purchaseIDCommentRequest) Build(r *http.Request) error {
 // Validate validates request to find comment by user id.
 func (req *purchaseIDCommentRequest) Validate() error {
 	switch {
-	case req.ID == "":
+	case !primitive.IsValidObjectID(req.ID):
 		return fmt.Errorf("not correct id")
 	default:
 		return nil
@@ -466,13 +473,18 @@ type userPurchaseIDCommentRequest struct {
 // Build builds request to find comment by user id and purchase id.
 func (req *userPurchaseIDCommentRequest) Build(r *http.Request) error {
 	vars := mux.Vars(r)
-	userID, ok := vars["userID"]
+	vUserID, ok := vars["userID"]
 	if !ok {
 		return fmt.Errorf("no user id")
 	}
 	purchaseID, ok := vars["purchaseID"]
 	if !ok {
 		return fmt.Errorf("no purchase id")
+	}
+
+	userID, err := strconv.Atoi(vUserID)
+	if err != nil {
+		return errors.Wrap(err, "conversation error")
 	}
 
 	req.UserID = userID
@@ -484,9 +496,9 @@ func (req *userPurchaseIDCommentRequest) Build(r *http.Request) error {
 // Validate validates request to find comment by user id and purchase id.
 func (req *userPurchaseIDCommentRequest) Validate() error {
 	switch {
-	case req.UserID == "":
+	case req.UserID == 0:
 		return fmt.Errorf("not correct user id")
-	case req.PurchaseID == "":
+	case !primitive.IsValidObjectID(req.PurchaseID):
 		return fmt.Errorf("not correct purchase id")
 	default:
 		return nil
@@ -564,8 +576,8 @@ func (req *textCommentRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
@@ -628,8 +640,8 @@ func (req *periodCommentRequest) Build(r *http.Request) error {
 		return err
 	}
 
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+	defer func(body io.ReadCloser) {
+		err := body.Close()
 		if err != nil {
 			log.Printf("%v", err)
 		}
