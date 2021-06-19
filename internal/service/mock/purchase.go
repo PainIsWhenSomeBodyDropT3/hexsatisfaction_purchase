@@ -125,11 +125,11 @@ func (_m *Purchase) FindAll(ctx context.Context) ([]model.PurchaseDTO, error) {
 }
 
 // FindAllByUserID provides a mock function with given fields: ctx, id
-func (_m *Purchase) FindAllByUserID(ctx context.Context, id string) ([]model.PurchaseDTO, error) {
+func (_m *Purchase) FindAllByUserID(ctx context.Context, id int) ([]model.PurchaseDTO, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 []model.PurchaseDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string) []model.PurchaseDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int) []model.PurchaseDTO); ok {
 		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
@@ -138,7 +138,7 @@ func (_m *Purchase) FindAllByUserID(ctx context.Context, id string) ([]model.Pur
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
@@ -240,11 +240,11 @@ func (_m *Purchase) FindByPeriod(ctx context.Context, start time.Time, end time.
 }
 
 // FindByUserIDAfterDate provides a mock function with given fields: ctx, id, start
-func (_m *Purchase) FindByUserIDAfterDate(ctx context.Context, id string, start time.Time) ([]model.PurchaseDTO, error) {
+func (_m *Purchase) FindByUserIDAfterDate(ctx context.Context, id int, start time.Time) ([]model.PurchaseDTO, error) {
 	ret := _m.Called(ctx, id, start)
 
 	var r0 []model.PurchaseDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string, time.Time) []model.PurchaseDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int, time.Time) []model.PurchaseDTO); ok {
 		r0 = rf(ctx, id, start)
 	} else {
 		if ret.Get(0) != nil {
@@ -253,7 +253,7 @@ func (_m *Purchase) FindByUserIDAfterDate(ctx context.Context, id string, start 
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string, time.Time) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int, time.Time) error); ok {
 		r1 = rf(ctx, id, start)
 	} else {
 		r1 = ret.Error(1)
@@ -263,11 +263,11 @@ func (_m *Purchase) FindByUserIDAfterDate(ctx context.Context, id string, start 
 }
 
 // FindByUserIDAndFileID provides a mock function with given fields: ctx, userID, fileID
-func (_m *Purchase) FindByUserIDAndFileID(ctx context.Context, userID string, fileID string) ([]model.PurchaseDTO, error) {
+func (_m *Purchase) FindByUserIDAndFileID(ctx context.Context, userID int, fileID string) ([]model.PurchaseDTO, error) {
 	ret := _m.Called(ctx, userID, fileID)
 
 	var r0 []model.PurchaseDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string, string) []model.PurchaseDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int, string) []model.PurchaseDTO); ok {
 		r0 = rf(ctx, userID, fileID)
 	} else {
 		if ret.Get(0) != nil {
@@ -276,7 +276,7 @@ func (_m *Purchase) FindByUserIDAndFileID(ctx context.Context, userID string, fi
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int, string) error); ok {
 		r1 = rf(ctx, userID, fileID)
 	} else {
 		r1 = ret.Error(1)
@@ -286,11 +286,11 @@ func (_m *Purchase) FindByUserIDAndFileID(ctx context.Context, userID string, fi
 }
 
 // FindByUserIDAndPeriod provides a mock function with given fields: ctx, id, start, end
-func (_m *Purchase) FindByUserIDAndPeriod(ctx context.Context, id string, start time.Time, end time.Time) ([]model.PurchaseDTO, error) {
+func (_m *Purchase) FindByUserIDAndPeriod(ctx context.Context, id int, start time.Time, end time.Time) ([]model.PurchaseDTO, error) {
 	ret := _m.Called(ctx, id, start, end)
 
 	var r0 []model.PurchaseDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string, time.Time, time.Time) []model.PurchaseDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int, time.Time, time.Time) []model.PurchaseDTO); ok {
 		r0 = rf(ctx, id, start, end)
 	} else {
 		if ret.Get(0) != nil {
@@ -299,7 +299,7 @@ func (_m *Purchase) FindByUserIDAndPeriod(ctx context.Context, id string, start 
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string, time.Time, time.Time) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int, time.Time, time.Time) error); ok {
 		r1 = rf(ctx, id, start, end)
 	} else {
 		r1 = ret.Error(1)
@@ -309,11 +309,11 @@ func (_m *Purchase) FindByUserIDAndPeriod(ctx context.Context, id string, start 
 }
 
 // FindByUserIDBeforeDate provides a mock function with given fields: ctx, id, end
-func (_m *Purchase) FindByUserIDBeforeDate(ctx context.Context, id string, end time.Time) ([]model.PurchaseDTO, error) {
+func (_m *Purchase) FindByUserIDBeforeDate(ctx context.Context, id int, end time.Time) ([]model.PurchaseDTO, error) {
 	ret := _m.Called(ctx, id, end)
 
 	var r0 []model.PurchaseDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string, time.Time) []model.PurchaseDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int, time.Time) []model.PurchaseDTO); ok {
 		r0 = rf(ctx, id, end)
 	} else {
 		if ret.Get(0) != nil {
@@ -322,7 +322,7 @@ func (_m *Purchase) FindByUserIDBeforeDate(ctx context.Context, id string, end t
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string, time.Time) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int, time.Time) error); ok {
 		r1 = rf(ctx, id, end)
 	} else {
 		r1 = ret.Error(1)
@@ -355,11 +355,11 @@ func (_m *Purchase) FindLast(ctx context.Context) (*model.PurchaseDTO, error) {
 }
 
 // FindLastByUserID provides a mock function with given fields: ctx, id
-func (_m *Purchase) FindLastByUserID(ctx context.Context, id string) (*model.PurchaseDTO, error) {
+func (_m *Purchase) FindLastByUserID(ctx context.Context, id int) (*model.PurchaseDTO, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 *model.PurchaseDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string) *model.PurchaseDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int) *model.PurchaseDTO); ok {
 		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
@@ -368,7 +368,7 @@ func (_m *Purchase) FindLastByUserID(ctx context.Context, id string) (*model.Pur
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)

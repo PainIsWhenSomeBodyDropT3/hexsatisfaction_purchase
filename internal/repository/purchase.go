@@ -112,18 +112,13 @@ func (p PurchaseRepo) FindByID(ctx context.Context, id string) (*model.PurchaseD
 }
 
 // FindLastByUserID finds last purchase by user userID.
-func (p PurchaseRepo) FindLastByUserID(ctx context.Context, id string) (*model.PurchaseDTO, error) {
+func (p PurchaseRepo) FindLastByUserID(ctx context.Context, id int) (*model.PurchaseDTO, error) {
 	opts := options.FindOne().SetSort(bson.M{"$natural": -1})
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
 	query := bson.M{
-		"userID": objID,
+		"userID": id,
 	}
 	var purchase model.Purchase
-	err = p.collection.FindOne(ctx, query, opts).Decode(&purchase)
+	err := p.collection.FindOne(ctx, query, opts).Decode(&purchase)
 	if err != nil {
 		return nil, err
 	}
@@ -132,14 +127,9 @@ func (p PurchaseRepo) FindLastByUserID(ctx context.Context, id string) (*model.P
 }
 
 // FindAllByUserID finds purchases by user userID.
-func (p PurchaseRepo) FindAllByUserID(ctx context.Context, id string) ([]model.PurchaseDTO, error) {
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (p PurchaseRepo) FindAllByUserID(ctx context.Context, id int) ([]model.PurchaseDTO, error) {
 	query := bson.M{
-		"userID": objID,
+		"userID": id,
 	}
 	var purchases model.Purchases
 	cursor, err := p.collection.Find(ctx, query)
@@ -156,14 +146,9 @@ func (p PurchaseRepo) FindAllByUserID(ctx context.Context, id string) ([]model.P
 }
 
 // FindByUserIDAndPeriod finds purchases by user userID and date period.
-func (p PurchaseRepo) FindByUserIDAndPeriod(ctx context.Context, id string, start, end time.Time) ([]model.PurchaseDTO, error) {
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (p PurchaseRepo) FindByUserIDAndPeriod(ctx context.Context, id int, start, end time.Time) ([]model.PurchaseDTO, error) {
 	query := bson.M{
-		"userID": objID,
+		"userID": id,
 		"date":   bson.M{"$gte": start, "$lte": end},
 	}
 	var purchases model.Purchases
@@ -181,14 +166,9 @@ func (p PurchaseRepo) FindByUserIDAndPeriod(ctx context.Context, id string, star
 }
 
 // FindByUserIDAfterDate finds purchases by user userID and after date.
-func (p PurchaseRepo) FindByUserIDAfterDate(ctx context.Context, id string, start time.Time) ([]model.PurchaseDTO, error) {
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (p PurchaseRepo) FindByUserIDAfterDate(ctx context.Context, id int, start time.Time) ([]model.PurchaseDTO, error) {
 	query := bson.M{
-		"userID": objID,
+		"userID": id,
 		"date":   bson.M{"$gte": start},
 	}
 	var purchases model.Purchases
@@ -206,14 +186,9 @@ func (p PurchaseRepo) FindByUserIDAfterDate(ctx context.Context, id string, star
 }
 
 // FindByUserIDBeforeDate finds purchases by user userID and before date.
-func (p PurchaseRepo) FindByUserIDBeforeDate(ctx context.Context, id string, end time.Time) ([]model.PurchaseDTO, error) {
-	objID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (p PurchaseRepo) FindByUserIDBeforeDate(ctx context.Context, id int, end time.Time) ([]model.PurchaseDTO, error) {
 	query := bson.M{
-		"userID": objID,
+		"userID": id,
 		"date":   bson.M{"$lte": end},
 	}
 	var purchases model.Purchases
@@ -231,19 +206,14 @@ func (p PurchaseRepo) FindByUserIDBeforeDate(ctx context.Context, id string, end
 }
 
 // FindByUserIDAndFileID finds purchases by user userID and purchase userID.
-func (p PurchaseRepo) FindByUserIDAndFileID(ctx context.Context, userID, fileID string) ([]model.PurchaseDTO, error) {
-	objUserID, err := primitive.ObjectIDFromHex(userID)
-	if err != nil {
-		return nil, err
-	}
-
+func (p PurchaseRepo) FindByUserIDAndFileID(ctx context.Context, userID int, fileID string) ([]model.PurchaseDTO, error) {
 	objFileID, err := primitive.ObjectIDFromHex(fileID)
 	if err != nil {
 		return nil, err
 	}
 
 	query := bson.M{
-		"userID": objUserID,
+		"userID": userID,
 		"fileID": objFileID,
 	}
 	var purchases model.Purchases

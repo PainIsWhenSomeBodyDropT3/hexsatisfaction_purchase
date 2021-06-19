@@ -58,18 +58,18 @@ func (_m *File) Delete(ctx context.Context, id string) (string, error) {
 }
 
 // DeleteByAuthorID provides a mock function with given fields: ctx, id
-func (_m *File) DeleteByAuthorID(ctx context.Context, id string) (string, error) {
+func (_m *File) DeleteByAuthorID(ctx context.Context, id int) (int, error) {
 	ret := _m.Called(ctx, id)
 
-	var r0 string
-	if rf, ok := ret.Get(0).(func(context.Context, string) string); ok {
+	var r0 int
+	if rf, ok := ret.Get(0).(func(context.Context, int) int); ok {
 		r0 = rf(ctx, id)
 	} else {
-		r0 = ret.Get(0).(string)
+		r0 = ret.Get(0).(int)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
@@ -148,11 +148,11 @@ func (_m *File) FindAll(ctx context.Context) ([]model.FileDTO, error) {
 }
 
 // FindByAuthorID provides a mock function with given fields: ctx, id
-func (_m *File) FindByAuthorID(ctx context.Context, id string) ([]model.FileDTO, error) {
+func (_m *File) FindByAuthorID(ctx context.Context, id int) ([]model.FileDTO, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 []model.FileDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string) []model.FileDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int) []model.FileDTO); ok {
 		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
@@ -161,7 +161,7 @@ func (_m *File) FindByAuthorID(ctx context.Context, id string) ([]model.FileDTO,
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)

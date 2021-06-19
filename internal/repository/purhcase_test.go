@@ -17,7 +17,7 @@ import (
 
 func Connect2PurchaseMongo() (context.Context, *PurchaseRepo, error) {
 	ctx := context.Background()
-	cfg, err := config.Init(configPath)
+	cfg, err := config.Init()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -42,7 +42,7 @@ func TestPurchaseRepo_Create(t *testing.T) {
 		{
 			name: "all ok",
 			purchase: model.PurchaseDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -87,7 +87,7 @@ func TestPurchaseRepo_Delete(t *testing.T) {
 			name: "all ok",
 			isOk: true,
 			purchase: model.PurchaseDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -142,7 +142,7 @@ func TestPurchaseRepo_DeleteByFileID(t *testing.T) {
 				data.purchase.FileID = data.id
 			},
 			purchase: model.PurchaseDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 			},
 		},
@@ -199,7 +199,7 @@ func TestPurchaseRepo_FindByID(t *testing.T) {
 				data.exp = &data.purchase
 			},
 			purchase: model.PurchaseDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -236,7 +236,7 @@ func TestPurchaseRepo_FindLastByUserID(t *testing.T) {
 	type test struct {
 		name     string
 		isOk     bool
-		id       string
+		id       int
 		fn       func(data *test)
 		purchase model.PurchaseDTO
 		exp      *model.PurchaseDTO
@@ -244,12 +244,8 @@ func TestPurchaseRepo_FindLastByUserID(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name:   "not found",
-			id:     primitive.NewObjectID().Hex(),
+			id:     1,
 			expErr: errors.New("mongo: no documents in result"),
 		},
 		{
@@ -259,7 +255,7 @@ func TestPurchaseRepo_FindLastByUserID(t *testing.T) {
 				data.purchase.UserID = data.id
 				data.exp = &data.purchase
 			},
-			id: primitive.NewObjectID().Hex(),
+			id: 1,
 			purchase: model.PurchaseDTO{
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				FileID: primitive.NewObjectID().Hex(),
@@ -297,7 +293,7 @@ func TestPurchaseRepo_FindAllByUserID(t *testing.T) {
 	type test struct {
 		name      string
 		isOk      bool
-		id        string
+		id        int
 		fn        func(data *test)
 		purchases []model.PurchaseDTO
 		exp       []model.PurchaseDTO
@@ -305,12 +301,8 @@ func TestPurchaseRepo_FindAllByUserID(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name: "not found",
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 		},
 		{
 			name: "all ok",
@@ -321,7 +313,7 @@ func TestPurchaseRepo_FindAllByUserID(t *testing.T) {
 				}
 				data.exp = data.purchases
 			},
-			id: primitive.NewObjectID().Hex(),
+			id: 1,
 			purchases: []model.PurchaseDTO{
 				{
 					Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
@@ -367,7 +359,7 @@ func TestPurchaseRepo_FindByUserIDAndPeriod(t *testing.T) {
 	type test struct {
 		name      string
 		isOk      bool
-		id        string
+		id        int
 		start     time.Time
 		end       time.Time
 		fn        func(data *test)
@@ -377,17 +369,13 @@ func TestPurchaseRepo_FindByUserIDAndPeriod(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name: "not found",
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 		},
 		{
 			name: "all ok",
 			isOk: true,
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 			fn: func(data *test) {
 				for i := range data.purchases {
 					data.purchases[i].UserID = data.id
@@ -442,7 +430,7 @@ func TestPurchaseRepo_FindByUserIDAfterDate(t *testing.T) {
 	type test struct {
 		name      string
 		isOk      bool
-		id        string
+		id        int
 		start     time.Time
 		fn        func(data *test)
 		purchases []model.PurchaseDTO
@@ -451,17 +439,13 @@ func TestPurchaseRepo_FindByUserIDAfterDate(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name: "not found",
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 		},
 		{
 			name: "all ok",
 			isOk: true,
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 			fn: func(data *test) {
 				for i := range data.purchases {
 					data.purchases[i].UserID = data.id
@@ -515,7 +499,7 @@ func TestPurchaseRepo_FindByUserIDBeforeDate(t *testing.T) {
 	type test struct {
 		name      string
 		isOk      bool
-		id        string
+		id        int
 		end       time.Time
 		fn        func(data *test)
 		purchases []model.PurchaseDTO
@@ -524,17 +508,13 @@ func TestPurchaseRepo_FindByUserIDBeforeDate(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name: "not found",
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 		},
 		{
 			name: "all ok",
 			isOk: true,
-			id:   primitive.NewObjectID().Hex(),
+			id:   1,
 			fn: func(data *test) {
 				for i := range data.purchases {
 					data.purchases[i].UserID = data.id
@@ -588,7 +568,7 @@ func TestPurchaseRepo_FindByUserIDAndFileID(t *testing.T) {
 	type test struct {
 		name      string
 		isOk      bool
-		userID    string
+		userID    int
 		fileID    string
 		fn        func(data *test)
 		purchases []model.PurchaseDTO
@@ -597,18 +577,14 @@ func TestPurchaseRepo_FindByUserIDAndFileID(t *testing.T) {
 	}
 	tt := []test{
 		{
-			name:   "not correct userID",
-			expErr: errors.New("the provided hex string is not a valid ObjectID"),
-		},
-		{
 			name:   "not found",
-			userID: primitive.NewObjectID().Hex(),
+			userID: 1,
 			fileID: primitive.NewObjectID().Hex(),
 		},
 		{
 			name:   "all ok",
 			isOk:   true,
-			userID: primitive.NewObjectID().Hex(),
+			userID: 1,
 			fileID: primitive.NewObjectID().Hex(),
 			fn: func(data *test) {
 				for i := range data.purchases {
@@ -679,7 +655,7 @@ func TestPurchaseRepo_FindLast(t *testing.T) {
 				data.exp = &data.purchase
 			},
 			purchase: model.PurchaseDTO{
-				UserID: primitive.NewObjectID().Hex(),
+				UserID: 1,
 				Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 				FileID: primitive.NewObjectID().Hex(),
 			},
@@ -732,7 +708,7 @@ func TestPurchaseRepo_FindAll(t *testing.T) {
 			},
 			purchases: []model.PurchaseDTO{
 				{
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -797,7 +773,7 @@ func TestPurchaseRepo_FindByPeriod(t *testing.T) {
 			end:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 			purchases: []model.PurchaseDTO{
 				{
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -860,7 +836,7 @@ func TestPurchaseRepo_FindAfterDate(t *testing.T) {
 			start: time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
 			purchases: []model.PurchaseDTO{
 				{
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -923,7 +899,7 @@ func TestPurchaseRepo_FindBeforeDate(t *testing.T) {
 			end: time.Date(2020, time.December, 10, 23, 10, 34, 0, time.UTC),
 			purchases: []model.PurchaseDTO{
 				{
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
 					FileID: primitive.NewObjectID().Hex(),
 				},
@@ -993,7 +969,7 @@ func TestPurchaseRepo_FindByFileID(t *testing.T) {
 			},
 			purchases: []model.PurchaseDTO{
 				{
-					UserID: primitive.NewObjectID().Hex(),
+					UserID: 1,
 					Date:   time.Date(2020, time.November, 10, 23, 10, 34, 0, time.UTC),
 				},
 			},

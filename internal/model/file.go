@@ -27,7 +27,7 @@ type FileDTO struct {
 	AddDate     time.Time `json:"addDate"`
 	UpdateDate  time.Time `json:"updateDate"`
 	Actual      bool      `json:"actual"`
-	AuthorID    string    `json:"authorID"`
+	AuthorID    int       `json:"authorID"`
 }
 
 // Entity converts FileDTO to File.
@@ -40,18 +40,13 @@ func (f FileDTO) Entity() (*File, error) {
 		AddDate:     f.AddDate,
 		UpdateDate:  f.UpdateDate,
 		Actual:      f.Actual,
+		AuthorID:    f.AuthorID,
 	}
 	var err error
 	if f.ID != "" {
 		file.ID, err = primitive.ObjectIDFromHex(f.ID)
 		if err != nil {
 			return nil, errors.Wrap(err, "invalid id")
-		}
-	}
-	if f.AuthorID != "" {
-		file.AuthorID, err = primitive.ObjectIDFromHex(f.AuthorID)
-		if err != nil {
-			return nil, errors.Wrap(err, "invalid author id")
 		}
 	}
 
@@ -69,7 +64,7 @@ func (f File) DTO() *FileDTO {
 		AddDate:     f.AddDate,
 		UpdateDate:  f.UpdateDate,
 		Actual:      f.Actual,
-		AuthorID:    f.AuthorID.Hex(),
+		AuthorID:    f.AuthorID,
 	}
 
 	return &file

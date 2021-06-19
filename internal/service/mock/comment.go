@@ -102,11 +102,11 @@ func (_m *Comment) FindAll(ctx context.Context) ([]model.CommentDTO, error) {
 }
 
 // FindAllByUserID provides a mock function with given fields: ctx, id
-func (_m *Comment) FindAllByUserID(ctx context.Context, id string) ([]model.CommentDTO, error) {
+func (_m *Comment) FindAllByUserID(ctx context.Context, id int) ([]model.CommentDTO, error) {
 	ret := _m.Called(ctx, id)
 
 	var r0 []model.CommentDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string) []model.CommentDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int) []model.CommentDTO); ok {
 		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
@@ -115,7 +115,7 @@ func (_m *Comment) FindAllByUserID(ctx context.Context, id string) ([]model.Comm
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
@@ -217,11 +217,11 @@ func (_m *Comment) FindByText(ctx context.Context, text string) ([]model.Comment
 }
 
 // FindByUserIDAndPurchaseID provides a mock function with given fields: ctx, userID, purchaseID
-func (_m *Comment) FindByUserIDAndPurchaseID(ctx context.Context, userID string, purchaseID string) ([]model.CommentDTO, error) {
+func (_m *Comment) FindByUserIDAndPurchaseID(ctx context.Context, userID int, purchaseID string) ([]model.CommentDTO, error) {
 	ret := _m.Called(ctx, userID, purchaseID)
 
 	var r0 []model.CommentDTO
-	if rf, ok := ret.Get(0).(func(context.Context, string, string) []model.CommentDTO); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int, string) []model.CommentDTO); ok {
 		r0 = rf(ctx, userID, purchaseID)
 	} else {
 		if ret.Get(0) != nil {
@@ -230,7 +230,7 @@ func (_m *Comment) FindByUserIDAndPurchaseID(ctx context.Context, userID string,
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int, string) error); ok {
 		r1 = rf(ctx, userID, purchaseID)
 	} else {
 		r1 = ret.Error(1)
