@@ -1,0 +1,21 @@
+# Ignore Git and other version control files
+.git
+.svn
+.hg
+.bzr
+
+# Ignore development and build artifacts
+node_modules/
+*.log
+*.tmp
+*.swp
+.DS_Store
+
+# Ignore IDE-specific files and directories
+.vscode/
+.idea/
+
+docker-compose.yml
+README.md
+.golangci.yml
+
