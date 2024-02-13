@@ -1,3 +1,23 @@
+build: 
+	cd cmd && go build -o hexsatisfaction_purchase .
+
+docker: build
+	# docker image prune -af
+	docker build -t hexsatisfaction_purchase:1.0 .
+
+docker-compose: docker
+	# docker image prune -af
+	# docker container prune -f
+	docker-compose build --no-cache
+	docker-compose up -d
+
+
+
+
+
+
+
+
 .PHONY lint:
 	golangci-lint run --config .golangci.yml
 
@@ -17,3 +37,4 @@ test-coverage:
 	go tool cover -html=coverage.out -o coverage.html
 
 start : lint  swagger  run
+

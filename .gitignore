@@ -17,4 +17,5 @@ rs.cor.authentication-ms
 *.out
 *.html
 
-/vendor
+cmd/hex*
+vendor
